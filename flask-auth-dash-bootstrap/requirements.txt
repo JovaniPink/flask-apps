@@ -1,4 +1,4 @@
-alembic==1.2.0
+alembic==1.5.8
 attrs==19.1.0
 certifi==2019.9.11
 chardet==3.0.4
