@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!--
+        The above 2 meta tags *must* come first in the <head>
+        to consistently ensure proper document rendering.
+        Any other head element should come *after* these tags.
+      -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+
+    <!-- Title -->
+    <title>Mission to Mars</title>
+
+    <!-- Seo -->
+    <!-- Short description of the document (limit to 150 characters) -->
+    <!-- This content *may* be used as a part of search engine results. -->
+    <meta name="description" content="Awesome pictures of Mars" />
+    <meta name="mission-to-mars" content="Mission to Mars" />
+    <meta name="theme-color" content="#211a23" />
+
+    <!-- Verify website ownership -->
+    <meta name="google-site-verification" content="verification_token" />
+    <!-- Google Search Console -->
+    <meta name="msvalidate.01" content="verification_token" />
+    <!-- Favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/static/favicon/apple-touch-icon.png"
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/static/favicon/favicon-32x32.png"
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/static/favicon/favicon-16x16.png"
+    />
+
+    <link rel="manifest" href="/static/favicon/site.webmanifest" />
+
+    <!-- Facebook -->
+    <meta property="fb:app_id" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mission to Mars" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:alt" content="Image of Mars" />
+    <meta property="og:description" content="Awesome pictures of Mars" />
+    <meta property="og:site_name" content="Mission to Mars" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="article:author"
+      content="https://www.facebook.com/JOVANIPINK"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="Awesome pictures of Mars" />
+    <meta name="twitter:creator" content="@JovaniPink" />
+    <meta name="twitter:url" content="" />
+    <meta name="twitter:title" content="Mission to Mars" />
+    <meta name="twitter:description" content="Awesome pictures of Mars" />
+    <meta name="twitter:image" content="" />
+    <meta name="twitter:image:alt" content="Image of Mars" />
+
+    <!-- CSS only -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div class="jumbotron text-center">
+          <h1 class="display-1">Mission to Mars</h1>
+          <p>
+            <button
+              id="scrape"
+              class="btn btn-info btn-lg btn-block"
+              type="submit"
+              role="button"
+            >
+              <span
+                id="scrape-spinner"
+                class="spinner-border spinner-border-sm d-none"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Scrape New Data
+            </button>
+          </p>
+        </div>
+      </div>
+      <section class="py-8 py-md-11">
+        <div class="container">
+          <div class="row" id="mars-news">
+            <div class="col-md-12">
+              <div class="media">
+                <div class="media-body">
+                  <h2 class="p-3 mb-2 bg-info">Latest Mars News</h2>
+                  <h4 class="media-heading">{{ mars.news_title }}</h4>
+                  <p>{{ mars.news_paragraph }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-8 py-md-11">
+        <div class="container">
+          <div class="row" id="mars-featured-image">
+            <div class="col-md-8">
+              <h2 class="p-3 mb-2 bg-info">Featured Mars Image</h2>
+              <img
+                src="{{mars.featured_image}}"
+                class="img-fluid"
+                alt="Responsive Image"
+              />
+            </div>
+            <div class="col-md-4">
+              <h2 class="p-3 mb-2 bg-info">Mars Facts</h2>
+              {{ mars.facts | safe }}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-8 py-md-11">
+        <div class="container">
+          <h2 class="p-3 mb-2 bg-info">Mars Hemispheres</h2>
+          <div class="row" id="mars-hemispheres">
+            {% for hemisphere in mars.hemispheres %}
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img
+                  class="img-fluid"
+                  src="{{hemisphere.img_url }}"
+                  alt="..."
+                />
+                <div class="caption">
+                  <h5 class="display-6">{{hemisphere.title}}</h5>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- <aside>
+      <div class="btn-group-fab" role="group" aria-label="FAB Menu">
+        <div>
+          <a
+            id="status"
+            type="button"
+            class="btn btn-main btn-primary"
+            title="Status"
+          >
+            Success
+          </a>
+        </div>
+      </div>
+    </aside> -->
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </body>
+</html>
