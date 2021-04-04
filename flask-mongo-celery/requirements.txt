@@ -1,4 +1,4 @@
-amqp==5.0.1
+amqp==5.0.6
 billiard==3.6.3.0
 celery==5.0.0
 certifi==2020.6.20
