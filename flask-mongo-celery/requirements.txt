@@ -14,7 +14,7 @@ kombu==5.0.2
 MarkupSafe==1.1.1
 flask_pymongo==2.3.0
 pymongo==3.11.3
-pytz==2020.1
+pytz==2020.5
 requests==2.24.0
 urllib3==1.25.10
 vine==5.0.0
