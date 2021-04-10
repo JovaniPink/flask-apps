@@ -16,7 +16,7 @@ marshmallow==2.21.0
 marshmallow-sqlalchemy==0.24.2
 openapi-spec-validator==0.3.0
 pathlib==1.0.1
-PyYAML==4.2b4
+PyYAML==5.4.1
 requests==2.21.0
 six==1.15.0
 SQLAlchemy==1.4.6
