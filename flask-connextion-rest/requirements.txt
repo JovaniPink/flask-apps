@@ -17,7 +17,7 @@ marshmallow-sqlalchemy==0.24.2
 openapi-spec-validator==0.3.0
 pathlib==1.0.1
 PyYAML==5.4.1
-requests==2.21.0
+requests==2.25.1
 six==1.15.0
 SQLAlchemy==1.4.7
 swagger-ui-bundle==0.0.8
