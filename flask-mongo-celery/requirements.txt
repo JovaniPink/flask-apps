@@ -15,7 +15,7 @@ MarkupSafe==1.1.1
 flask_pymongo==2.3.0
 pymongo==3.11.3
 pytz==2020.5
-requests==2.24.0
+requests==2.25.1
 urllib3==1.26.4
 vine==5.0.0
 Werkzeug==1.0.1
@@ -23,6 +23,6 @@ zipp==3.4.1
 splinter==0.14.0
 pandas==1.2.3
 numpy==1.20.2
-requests==2.18.4
+requests==2.25.1
 lxml==4.6.3
 beautifulsoup4==4.9.3
