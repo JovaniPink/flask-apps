@@ -14,7 +14,7 @@ jsonschema==3.2.0
 MarkupSafe==2.0.0
 marshmallow==3.12.1
 marshmallow-sqlalchemy==0.25.0
-openapi-spec-validator==0.3.0
+openapi-spec-validator==0.3.1
 pathlib==1.0.1
 PyYAML==5.4.1
 requests==2.25.1
