@@ -3,7 +3,7 @@ chardet==4.0.0
 Click==8.0.0
 clickclick==20.10.2
 connexion==2.7.0
-Flask==1.1.2
+Flask==2.0.0
 flask-marshmallow==0.14.0
 Flask-SQLAlchemy==2.5.1
 idna==3.1
