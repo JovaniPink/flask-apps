@@ -20,7 +20,7 @@ urllib3==1.26.4
 vine==5.0.0
 Werkzeug==2.0.1
 zipp==3.4.1
-splinter==0.14.0
+splinter==0.21.0
 pandas==1.2.4
 numpy==1.20.3
 requests==2.25.1
