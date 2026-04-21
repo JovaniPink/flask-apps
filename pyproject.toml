@@ -1,0 +1,10 @@
+[tool.ruff]
+exclude = [
+    "flask-auth-dash-bootstrap",
+    "flask-bootstrap",
+    "flask-connextion-rest",
+    "flask-dash-bootstrap",
+    "flask-graphene-sqlalchemy",
+    "flask-mongo-celery",
+    "flask-sql-celery",
+]
