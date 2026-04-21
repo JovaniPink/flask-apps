@@ -1,7 +1,6 @@
-Click
-Flask
-gunicorn
-itsdangerous
-Jinja2
-MarkupSafe
-Werkzeug
+# Hand-curated lock for flask-auth. Regenerate with:
+#   uv pip compile pyproject.toml -o requirements.txt
+# or
+#   pip-compile --resolver=backtracking pyproject.toml -o requirements.txt
+flask>=3.1,<4
+gunicorn>=23
