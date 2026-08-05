@@ -1,16 +1,24 @@
-from datetime import datetime
+"""Database models and Marshmallow 4 schemas."""
+
+from datetime import datetime, timezone
+
+from marshmallow import Schema, fields
+
 from config import db, ma
-from marshmallow import fields
+
+
+def utc_now():
+    """Return a timezone-naive UTC value for the existing SQLite columns."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class Person(db.Model):
     __tablename__ = "person"
+
     person_id = db.Column(db.Integer, primary_key=True)
     lname = db.Column(db.String(32))
     fname = db.Column(db.String(32))
-    timestamp = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    timestamp = db.Column(db.DateTime, default=utc_now, onupdate=utc_now)
     notes = db.relationship(
         "Note",
         backref="person",
@@ -22,59 +30,41 @@ class Person(db.Model):
 
 class Note(db.Model):
     __tablename__ = "note"
+
     note_id = db.Column(db.Integer, primary_key=True)
     person_id = db.Column(db.Integer, db.ForeignKey("person.person_id"))
     content = db.Column(db.String, nullable=False)
-    timestamp = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    timestamp = db.Column(db.DateTime, default=utc_now, onupdate=utc_now)
 
 
-class PersonSchema(ma.ModelSchema):
-    def __init__(self, **kwargs):
-        super().__init__(strict=True, **kwargs)
-
-    class Meta:
-        model = Person
-        sqla_session = db.session
-
-    notes = fields.Nested("PersonNoteSchema", default=[], many=True)
-
-
-class PersonNoteSchema(ma.ModelSchema):
-    """
-    This class exists to get around a recursion issue
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(strict=True, **kwargs)
-
+class PersonNoteSchema(Schema):
     note_id = fields.Int()
     person_id = fields.Int()
     content = fields.Str()
-    timestamp = fields.Str()
+    timestamp = fields.DateTime()
 
 
-class NoteSchema(ma.ModelSchema):
-    def __init__(self, **kwargs):
-        super().__init__(strict=True, **kwargs)
-
+class PersonSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Note
+        model = Person
+        load_instance = True
         sqla_session = db.session
 
-    person = fields.Nested("NotePersonSchema", default=None)
+    notes = fields.Nested(PersonNoteSchema, many=True, dump_default=list)
 
 
-class NotePersonSchema(ma.ModelSchema):
-    """
-    This class exists to get around a recursion issue
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(strict=True, **kwargs)
-
+class NotePersonSchema(Schema):
     person_id = fields.Int()
     lname = fields.Str()
     fname = fields.Str()
-    timestamp = fields.Str()
+    timestamp = fields.DateTime()
+
+
+class NoteSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Note
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+    person = fields.Nested(NotePersonSchema, dump_default=None)
