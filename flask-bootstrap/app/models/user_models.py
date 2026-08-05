@@ -2,54 +2,40 @@
 #
 # Authors: Ling Thio <ling.thio@gmail.com>, Matt Hogan <matt@twintechlabs.io>
 
-from flask_user import UserMixin
-from flask_user.forms import RegisterForm
+from flask_security import RegisterFormV2, RoleMixin, UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, validators
 from app import db
 
 
-# Define the User data model. Make sure to add the flask_user.UserMixin !!
+# Define the user data model required by Flask-Security-Too.
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
 
-    # User authentication information (required for Flask-User)
+    # User authentication information required by Flask-Security-Too.
     email = db.Column(db.Unicode(255), nullable=False, server_default=u'', unique=True)
-    email_confirmed_at = db.Column(db.DateTime())
+    confirmed_at = db.Column(db.DateTime())
     password = db.Column(db.String(255), nullable=False, server_default='')
-    # reset_password_token = db.Column(db.String(100), nullable=False, server_default='')
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
-
-    # User information
-    active = db.Column('is_active', db.Boolean(), nullable=False, server_default='0')
+    fs_uniquifier = db.Column(db.String(64), unique=True, nullable=False)
     first_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
     last_name = db.Column(db.Unicode(50), nullable=False, server_default=u'')
 
     # Relationships
     roles = db.relationship('Role', secondary='users_roles',
                             backref=db.backref('users', lazy='dynamic'))
-    def has_role(self, role):
-        for item in self.roles:
-            if item.name == 'admin':
-                return True
-        return False
-
-    def role(self):
-        print(self.roles)
-        for item in self.roles:
-            return item.name
 
     def name(self):
         return self.first_name + " " + self.last_name
 
 
 # Define the Role data model
-class Role(db.Model):
+class Role(db.Model, RoleMixin):
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), nullable=False, server_default=u'', unique=True)  # for @roles_accepted()
-    label = db.Column(db.Unicode(255), server_default=u'')  # for display purposes
+    description = db.Column(db.Unicode(255), server_default=u'')
 
 
 # Define the UserRoles association model
@@ -61,8 +47,8 @@ class UsersRoles(db.Model):
 
 
 # Define the User registration form
-# It augments the Flask-User RegisterForm with additional fields
-class MyRegisterForm(RegisterForm):
+# It augments Flask-Security-Too's registration form with profile fields.
+class MyRegisterForm(RegisterFormV2):
     first_name = StringField('First name', validators=[
         validators.DataRequired('First name is required')])
     last_name = StringField('Last name', validators=[

@@ -1,29 +1,42 @@
-# Settings common to all environments (development|staging|production)
-# Place environment specific settings in env_settings.py
-# An example file (env_settings_example.py) can be used as a starting point
+"""Environment-backed application settings."""
 
 import os
+from pathlib import Path
 
-# Application settings
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 APP_NAME = "Flask Starter App"
 APP_SYSTEM_ERROR_SUBJECT_LINE = APP_NAME + " system error"
 
-# Flask settings
 CSRF_ENABLED = True
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Flask-SQLAlchemy settings
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    "DATABASE_URL", f"sqlite:///{BASE_DIR / 'app.db'}"
+)
 
-# Flask-User settings
-USER_APP_NAME = APP_NAME
-USER_ENABLE_CHANGE_PASSWORD = True  # Allow users to change their password
-USER_ENABLE_CHANGE_USERNAME = False  # Allow users to change their username
-USER_ENABLE_CONFIRM_EMAIL = True  # Force users to confirm their email
-USER_ENABLE_FORGOT_PASSWORD = True  # Allow users to reset their passwords
-USER_ENABLE_EMAIL = True  # Register with Email
-USER_ENABLE_REGISTRATION = True  # Allow new users to register
-USER_REQUIRE_RETYPE_PASSWORD = True  # Prompt for `retype password` in:
-USER_ENABLE_USERNAME = False  # Register and Login with username
-USER_AFTER_LOGIN_ENDPOINT = 'main.home_page'
-USER_AFTER_LOGOUT_ENDPOINT = 'main.member_page'
-USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = False
+SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+SECURITY_PASSWORD_HASH = "argon2"
+SECURITY_REGISTERABLE = True
+SECURITY_CONFIRMABLE = True
+SECURITY_RECOVERABLE = True
+SECURITY_CHANGEABLE = True
+SECURITY_PASSWORD_CONFIRM_REQUIRED = True
+SECURITY_WEBAUTHN = False
+SECURITY_POST_LOGIN_VIEW = "/home"
+SECURITY_POST_LOGOUT_VIEW = "/"
+SECURITY_URL_PREFIX = "/user"
+SECURITY_LOGIN_URL = "/sign-in"
+SECURITY_LOGOUT_URL = "/sign-out"
+SECURITY_REGISTER_URL = "/register"
+SECURITY_FORGOT_PASSWORD_URL = "/forgot-password"
+SECURITY_CHANGE_PASSWORD_URL = "/change-password"
+SECURITY_LOGIN_USER_TEMPLATE = "flask_user/login.html"
+SECURITY_REGISTER_USER_TEMPLATE = "flask_user/register.html"
+
+MAIL_SERVER = os.environ.get("MAIL_SERVER", "localhost")
+MAIL_PORT = int(os.environ.get("MAIL_PORT", "25"))
+MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "no-reply@localhost")
+MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")

@@ -1,7 +1,6 @@
 {% extends "common/page_base.html" %}
 
 {% block content %}
-{% from "flask_user/_macros.html" import render_field, render_submit_field %}
 <div class="flex-row align-items-center app">
   <div class="container">
     <div class="row justify-content-center">
@@ -9,7 +8,7 @@
         <div class="card mx-4">
           <div class="card-body p-4">
             <form action="" method="POST" novalidate formnovalidate class="form" role="form">
-                {{ form.hidden_tag() }}
+                {{ register_user_form.hidden_tag() }}
                 <h1>Register</h1>
                 <p class="text-muted">Create your account</p>
                 <div class="input-group mb-3">
@@ -51,7 +50,7 @@
                       <i class="icon-lock"></i>
                     </span>
                   </div>
-                  <input class="form-control" id="retype_password" name="retype_password" tabindex="270" type="password" value="" placeholder="Retype password">
+                  <input class="form-control" id="password_confirm" name="password_confirm" tabindex="270" type="password" value="" placeholder="Retype password">
                 </div>
                 <button type="submit" class="btn btn-block btn-success">Create Account</button>
             </form>

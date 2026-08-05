@@ -1,30 +1,16 @@
-"""This file sets up a command line manager.
+"""Flask CLI entry point."""
 
-Use "python manage.py" for a list of available commands.
-Use "python manage.py runserver" to start the development web server on localhost:5000.
-Use "python manage.py runserver --help" for additional runserver options.
-"""
-
-from os import environ
-from flask_migrate import MigrateCommand
-from flask_script import Manager
-
-get_config_mode = environ.get('MEASUREDSTUDIOS_CONFIG_MODE', 'Debug')
-
-# try:
-#     config_mode = config_dict[get_config_mode.capitalize()]
-# except KeyError:
-#     exit('Error: Invalid MEASUREDSTUDIOS_CONFIG_MODE environment variable entry.')
+import click
 
 from app import create_app
-from app.commands import InitDbCommand
+from app.commands.init_db import init_db
 
-# Setup Flask-Script with command line commands
-manager = Manager(create_app) # create_app(config_mode)
-manager.add_command('db', MigrateCommand)
-manager.add_command('init_db', InitDbCommand)
+app = create_app()
 
-if __name__ == "__main__":
-    # python manage.py                      # shows available commands
-    # python manage.py runserver --help     # shows available runserver options
-    manager.run()
+
+@app.cli.command("init-db")
+@click.confirmation_option(prompt="Drop and rebuild the local database?")
+def init_db_command():
+    """Explicitly rebuild and seed the local sample database."""
+    init_db()
+    click.echo("Initialized the sample database.")

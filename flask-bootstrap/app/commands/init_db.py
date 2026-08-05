@@ -5,18 +5,12 @@
 # Authors: Ling Thio <ling.thio@gmail.com>
 
 import datetime
+import uuid
 
-from flask import current_app
-from flask_script import Command
+from flask_security import hash_password
 
 from app import db
 from app.models.user_models import User, Role
-
-class InitDbCommand(Command):
-    """ Initialize the database."""
-
-    def run(self):
-        init_db()
 
 def init_db():
     """ Initialize the database."""
@@ -42,11 +36,11 @@ def create_users():
     db.session.commit()
 
 
-def find_or_create_role(name, label):
+def find_or_create_role(name, description):
     """ Find existing role or create new role """
     role = Role.query.filter(Role.name == name).first()
     if not role:
-        role = Role(name=name, label=label)
+        role = Role(name=name, description=description)
         db.session.add(role)
     return role
 
@@ -58,13 +52,12 @@ def find_or_create_user(first_name, last_name, email, password, role=None):
         user = User(email=email,
                     first_name=first_name,
                     last_name=last_name,
-                    password=current_app.user_manager.hash_password(password),
+                    password=hash_password(password),
                     active=True,
-                    email_confirmed_at=datetime.datetime.utcnow())
+                    fs_uniquifier=uuid.uuid4().hex,
+                    confirmed_at=datetime.datetime.now(datetime.UTC))
         if role:
             user.roles.append(role)
         db.session.add(user)
     return user
-
-
 

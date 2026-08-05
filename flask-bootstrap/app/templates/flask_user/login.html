@@ -11,7 +11,7 @@
             <form action="" method="POST" class="form" role="form">
               <input id="next" name="next" type="hidden" value="/">
               <input id="reg_next" name="reg_next" type="hidden" value="/">
-              {{ form.hidden_tag() }}
+              {{ login_user_form.hidden_tag() }}
               {# One-time system messages called Flash messages #}
               {% block flash_messages %}
                   {%- with messages = get_flashed_messages(with_categories=true) -%}

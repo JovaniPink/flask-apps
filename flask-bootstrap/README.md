@@ -1,4 +1,4 @@
-# FlaskApp starter app v0.9
+# FlaskApp starter app
 
 ![Screenshot](https://github.com/twintechlabs/flaskapp/blob/master/app/static/images/screenshot.png)
 
@@ -12,7 +12,8 @@ wide variety of applications based on Python and Flask.
 
 ## Code characteristics
 
-* Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5 and 3.6
+* Runs on Python 3.14 and Flask 3.1
+* Uses Flask-Security-Too for authentication and role management
 * Well organized directories with lots of comments
     * app
         * commands
@@ -21,57 +22,51 @@ wide variety of applications based on Python and Flask.
         * templates
         * views
     * tests
-* Includes test framework (`py.test` and `tox`)
+* Includes a pytest test suite
 * Includes database migration framework (`alembic`)
 * Sends error emails to admins for unhandled exceptions
 
 ## Setting up a development environment
 
-We assume that you have `git` and `virtualenv` and `virtualenvwrapper` installed.
+You need Python 3.14 and a virtual environment tool, or Docker.
 
     # Clone the code repository into ~/dev/my_app
     mkdir -p ~/dev
     cd ~/dev
     git clone https://github.com/twintechlabs/flaskdash.git my_app
 
-    # Create the 'my_app' virtual environment
-    mkvirtualenv -p PATH/TO/PYTHON my_app
-
-    # Install required Python packages
+    # Create a virtual environment and install the locked dependencies
     cd ~/dev/my_app
-    workon my_app
-    pip install -r requirements.txt
+    python3.14 -m venv .venv
+    . .venv/bin/activate
+    python -m pip install -r requirements.txt
+
+Set unique secrets before starting the app. Do not reuse the example values in
+production:
+
+    export SECRET_KEY="replace-with-a-long-random-value"
+    export SECURITY_PASSWORD_SALT="replace-with-another-random-value"
 
 
-# Configuring SMTP
+## Configuring SMTP
 
-Edit the `local_settings.py` file.
-
-Specifically set all the MAIL_... settings to match your SMTP settings
-
-Note that Google's SMTP server requires the configuration of "less secure apps".
-See https://support.google.com/accounts/answer/6010255?hl=en
-
-Note that Yahoo's SMTP server requires the configuration of "Allow apps that use less secure sign in".
-See https://help.yahoo.com/kb/SLN27791.html
+Set `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USE_TLS`, `MAIL_USERNAME`, and
+`MAIL_PASSWORD` in the environment. Flask-Security-Too uses these settings for
+confirmation and password-recovery messages. The development and test
+configurations suppress delivery by default.
 
 
 ## Initializing the Database
 
     # Create DB tables and populate the roles and users tables
-    python manage.py init_db
-
-    # Or if you have Fabric installed:
-    fab init_db
+    flask --app wsgi:app db upgrade
+    flask --app manage:app init-db
 
 
 ## Running the app (development)
 
     # Start the Flask development web server
-    python manage.py runserver
-
-    # Or if you have Fabric installed:
-    fab runserver
+    flask --app wsgi:app run --debug
 
 Point your web browser to http://localhost:5000/
 
@@ -81,23 +76,27 @@ You can make use of the following users:
 
 ## Running the app (production)
 
-To run the application in production mode, gunicorn3 is used (and included in requirements.txt.
+Gunicorn is included in the locked dependencies:
 
-    # Run the application in production mode
-    ./runserver.sh
+    gunicorn wsgi:app
+
+Or use the container image:
+
+    docker build -t flask-bootstrap .
+    docker run --rm -p 8000:8000 \
+      -e SECRET_KEY="replace-with-a-long-random-value" \
+      -e SECURITY_PASSWORD_SALT="replace-with-another-random-value" \
+      flask-bootstrap
 
 ## Running the automated tests
 
-    # Start the Flask development web server
-    py.test tests/
-
-    # Or if you have Fabric installed:
-    fab test
+    python -m pytest -q
 
 
 ## Trouble shooting
 
-If you make changes in the Models and run into DB schema issues, delete the sqlite DB file `app.sqlite`.
+Use Flask-Migrate for schema changes. Do not delete a database that contains
+data; apply and verify a migration instead.
 
 
 ## Acknowledgements
@@ -108,8 +107,7 @@ With thanks to the following Flask extensions:
 * [Flask](http://flask.pocoo.org/)
 * [Flask-Login](https://flask-login.readthedocs.io/)
 * [Flask-Migrate](https://flask-migrate.readthedocs.io/)
-* [Flask-Script](https://flask-script.readthedocs.io/)
-* [Flask-User](http://flask-user.readthedocs.io/en/v0.6/)
+* [Flask-Security-Too](https://flask-security-too.readthedocs.io/)
 
 <!-- Please consider leaving this line. Thank you -->
 [Flask-User-starter-app](https://github.com/lingthio/Flask-User-starter-app) was used as a starting point for this code repository.
