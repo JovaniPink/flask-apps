@@ -68,20 +68,31 @@ We worked on our scraping script within Jupyter Notebook and then exported the c
 
 ### Usage
 
-Running this app requires you to have a mongo, celery, and flask server running at the same time.
+The app targets Python 3.14. Direct dependencies live in `requirements.in`;
+`requirements.txt` is the reproducible compiled lock. Running a scrape requires
+MongoDB, a Celery worker, Chromium, and the Flask web process.
 
 ```powershell
-PS ~/mission-to-mars/> mongod
+mongod
 ```
 
 ```powershell
-PS ~/mission-to-mars/> celery -A app.celery worker --pool=solo -l info
+celery -A app.celery worker --loglevel=info
 ```
 
 ```powershell
-PS ~/mission-to-mars/> $env:FLASK_APP = 'app'
-PS ~/mission-to-mars/> $env:FLASK_ENV = 'development'
-PS ~/mission-to-mars/> python app.py
+export MONGODB_URI='mongodb://localhost:27017/mars_app'
+gunicorn --bind 127.0.0.1:8000 app:app
+```
+
+The `CELERY_BROKER_URL` and `CELERY_RESULT_BACKEND` variables may override the
+MongoDB defaults independently.
+
+### Container validation
+
+```sh
+docker build -t flask-mongo-celery .
+docker run --rm flask-mongo-celery python -m pytest -q
 ```
 
 ### Routes
@@ -98,7 +109,7 @@ PS ~/mission-to-mars/> python app.py
 
 A helpful checklist to gauge how your README is coming on what I would like to finish:
 
-- [ ] PYTHON REQUIREMENTS FILE! pipenv?!?
+- [x] Maintain direct and compiled Python requirements.
 - [ ] Update the UI/UX.
 - [ ] jQuery needs work.
 - [ ] State management and logic with the Fetch button

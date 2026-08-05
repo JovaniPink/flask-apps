@@ -1,32 +1,26 @@
-# Import Dependencies
+import os
+
 from celery import Celery
-from flask import Flask, render_template, redirect
-from flask.globals import request
-from flask.helpers import url_for
-from flask.json import jsonify
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_pymongo import PyMongo
 
-# update with every project
-DB_NAME = "mars_app"
-MONGODB_URL = "mongodb://localhost:27017/"
-
-# mongodb connection string
-MONGODB_DATABASE_URL = f"{MONGODB_URL}{DB_NAME}"
+MONGODB_DATABASE_URL = os.environ.get(
+    "MONGODB_URI", "mongodb://localhost:27017/mars_app"
+)
 
 # Initialize the flask app
 app = Flask(__name__)
 
-app.config["broker_url"] = MONGODB_DATABASE_URL
-app.config["result_backend"] = MONGODB_DATABASE_URL
+app.config["MONGO_URI"] = MONGODB_DATABASE_URL
 
 # Use flask_pymongo to set up mongo connection
-app.config["MONGO_URI"] = "mongodb://localhost:27017/mars_app"
 mongo = PyMongo(app)
 
-celery = Celery(
-    app.name, backend=app.config["result_backend"], broker=app.config["broker_url"]
+celery = Celery(app.name)
+celery.conf.update(
+    broker_url=os.environ.get("CELERY_BROKER_URL", MONGODB_DATABASE_URL),
+    result_backend=os.environ.get("CELERY_RESULT_BACKEND", MONGODB_DATABASE_URL),
 )
-celery.conf.update(app.config)
 
 
 import scraping
@@ -37,8 +31,7 @@ def index():
     mars = mongo.db.mars_app.find_one()
     if request.method == "GET":
         return render_template("index.html", mars=mars)
-    elif request.method == "POST":
-        return redirect(url_for("index"))
+    return redirect(url_for("index"))
 
 
 # # Originally we have a route that runs the web harvesting function
