@@ -53,11 +53,11 @@
                   {% endif %}                   
                   {% if current_user.is_authenticated: %}
                   <li class="nav-item">
-                      <a class="nav-link" href="{{ url_for('user.logout') }}">Sign out</a>
+                      <a class="nav-link" href="{{ url_for('security.logout') }}">Sign out</a>
                   </li>    
                   {% else %}
                   <li class="nav-item">
-                      <a class="nav-link" href="{{ url_for('user.login') }}">Sign In / Signup</a>
+                      <a class="nav-link" href="{{ url_for('security.login') }}">Sign In / Signup</a>
                   </li>                              
                   {% endif %}                
               </ul>

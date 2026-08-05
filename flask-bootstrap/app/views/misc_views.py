@@ -2,7 +2,7 @@
 
 from flask import Blueprint, redirect, render_template, current_app
 from flask import request, url_for, flash, send_from_directory, jsonify, render_template_string
-from flask_user import current_user, login_required, roles_accepted
+from flask_security import auth_required, current_user, hash_password, roles_accepted
 
 from app import db
 from app.models.user_models import UserProfileForm, User, UsersRoles
@@ -28,7 +28,7 @@ def member_page():
     return render_template('pages/global.html')
 
 @main_blueprint.route('/home')
-@login_required
+@auth_required()
 def home_page():
     return render_template('pages/home.html')
 
@@ -56,9 +56,10 @@ def create_user_page():
             user = User(email=request.form['email'],
                         first_name=request.form['first_name'],
                         last_name=request.form['last_name'],
-                        password=current_app.user_manager.hash_password(request.form['password']),
+                        password=hash_password(request.form['password']),
                         active=True,
-                        email_confirmed_at=datetime.datetime.utcnow())
+                        fs_uniquifier=uuid.uuid4().hex,
+                        confirmed_at=datetime.datetime.now(datetime.UTC))
             db.session.add(user)
             db.session.commit()
             flash('You successfully created your user!', 'success')
@@ -83,7 +84,7 @@ def delete_user_page():
         return redirect(request.referrer)
 
 @main_blueprint.route('/pages/profile', methods=['GET', 'POST'])
-@login_required
+@auth_required()
 def user_profile_page():
     # Initialize form
     form = UserProfileForm(request.form, obj=current_user)
