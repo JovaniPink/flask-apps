@@ -20,7 +20,7 @@ def read_all():
 
     # Serialize the data for the response
     person_schema = PersonSchema(many=True)
-    data = person_schema.dump(people).data
+    data = person_schema.dump(people)
     return data
 
 
@@ -44,7 +44,7 @@ def read_one(person_id):
 
         # Serialize the data for the response
         person_schema = PersonSchema()
-        data = person_schema.dump(person).data
+        data = person_schema.dump(person)
         return data
 
     # Otherwise, nope, didn't find that person
@@ -74,14 +74,14 @@ def create(person):
 
         # Create a person instance using the schema and the passed in person
         schema = PersonSchema()
-        new_person = schema.load(person, session=db.session).data
+        new_person = schema.load(person, session=db.session)
 
         # Add the person to the database
         db.session.add(new_person)
         db.session.commit()
 
         # Serialize and return the newly created person in the response
-        data = schema.dump(new_person).data
+        data = schema.dump(new_person)
 
         return data, 201
 
@@ -106,19 +106,18 @@ def update(person_id, person):
     # Did we find an existing person?
     if update_person is not None:
 
-        # turn the passed in person into a db object
+        # Apply the submitted fields to the persistent object.
         schema = PersonSchema()
-        update = schema.load(person, session=db.session).data
-
-        # Set the id to the person we want to update
-        update.person_id = update_person.person_id
-
-        # merge the new object into the old and commit it to the db
-        db.session.merge(update)
+        update = schema.load(
+            person,
+            instance=update_person,
+            session=db.session,
+            partial=True,
+        )
         db.session.commit()
 
         # return updated person in the response
-        data = schema.dump(update_person).data
+        data = schema.dump(update)
 
         return data, 200
 

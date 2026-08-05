@@ -1,9 +1,11 @@
-import os
-from datetime import datetime
-from config import db
-from models import Person, Note
+"""Create and seed the development SQLite database."""
 
-# Data to initialize database with
+from datetime import datetime
+
+from config import db
+from models import Note, Person
+from server import app
+
 PEOPLE = [
     {
         "fname": "Doug",
@@ -38,26 +40,29 @@ PEOPLE = [
     },
 ]
 
-# Delete database file if it exists currently
-if os.path.exists("people.db"):
-    os.remove("people.db")
 
-# Create the database
-db.create_all()
+def rebuild_database():
+    """Reset the configured database and load the example records."""
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
 
-# iterate over the PEOPLE structure and populate the database
-for person in PEOPLE:
-    p = Person(lname=person.get("lname"), fname=person.get("fname"))
-
-    # Add the notes for the person
-    for note in person.get("notes"):
-        content, timestamp = note
-        p.notes.append(
-            Note(
-                content=content,
-                timestamp=datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S"),
+        for person_data in PEOPLE:
+            person = Person(
+                lname=person_data["lname"],
+                fname=person_data["fname"],
             )
-        )
-    db.session.add(p)
+            for content, timestamp in person_data["notes"]:
+                person.notes.append(
+                    Note(
+                        content=content,
+                        timestamp=datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S"),
+                    )
+                )
+            db.session.add(person)
 
-db.session.commit()
+        db.session.commit()
+
+
+if __name__ == "__main__":
+    rebuild_database()
