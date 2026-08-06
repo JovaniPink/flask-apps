@@ -93,7 +93,7 @@ python-dateutil==2.9.0.post0
     # via
     #   celery
     #   pandas
-selenium==4.16.0
+selenium==4.46.0
     # via splinter
 six==1.17.0
     # via python-dateutil
