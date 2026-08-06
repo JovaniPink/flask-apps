@@ -1,67 +1,108 @@
 # Flask Apps
 
-> A huge folder where I could store flask template applications.
+A collection of independent Flask service and application starters. Each
+top-level directory is its own runnable example; this repository is not one
+installable monolith.
 
-## Overview
+## Example inventory
 
-Currently I use Flask in multiple situations:
+| Directory | Purpose | Runtime status |
+| --- | --- | --- |
+| `flask-auth-dash-bootstrap` | Flask authentication around an embedded Dash app | Python 3.14, locked and tested |
+| `flask-bootstrap` | Server-rendered Flask application with authentication and admin views | Python 3.14, locked and tested; frontend remains Bootstrap 4 |
+| `flask-connextion-rest` | Connexion/OpenAPI people and notes CRUD service | Python 3.14, locked and tested |
+| `flask-mongo-celery` | Flask, MongoDB, Celery, and browser-scraping example | Python 3.14, locked and container-tested |
+| `flask-auth` | Small authentication-webhook prototype | Legacy; modernization required |
+| `flask-dash-bootstrap` | Dash and Bootstrap prototype | Legacy Python 3.9/Pipenv |
+| `flask-graphene-sqlalchemy` | GraphQL and SQLAlchemy prototype | Legacy Python 3.9/Pipenv |
+| `flask-sql-celery` | SQL-backed Celery deployment prototype | Legacy Python 3.9.5/Pipenv |
 
-- Need a RESTful API for my Next.js app.
-- Need a GraphQL API for my Gatsby.js app.
-- Need to persistent data and have long running processes compute datasets.
-- Need to create a server HTML app over basics forms.
-- Need to create a Dash/Plot.ly dashboard for presenting some analysis.
-- etc.
+“Legacy” means the directory is preserved as a reference and is not covered by
+the repository CI matrix. Do not infer current production readiness from its
+presence here.
 
-I've created a series folders as starters with my past Flask use.
+## Working with an example
 
-## Features
+Read the example's own README first. For one of the Python 3.14 examples, the
+usual local flow is:
 
-Its not just Flask but an ecosystem to properly create a RESTful API service:
+```sh
+cd flask-connextion-rest
+python3.14 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pytest -q
+```
 
-- [Flask](https://flask.palletsprojects.com/en/1.1.x/) is a lightweight WSGI web application framework in Python. It is designed to make getting started very quickly and very easily.
-- [Connexion](https://connexion.readthedocs.io/en/latest/index.html) is a framework on top of Flask that automatically handles HTTP requests defined using OpenAPI (formerly known as Swagger), supporting both v2.0 and v3.0 of the specification.
-- [Graphene](https://github.com/graphql-python/graphene)
-- [marshmallow](https://marshmallow.readthedocs.io/en/stable/) is an ORM/ODM/framework-agnostic library for converting complex datatypes, such as objects, to and from native Python datatypes.
-- [Flask-Marshmallow](https://flask-marshmallow.readthedocs.io/en/latest/) is a thin integration layer for Flask and marshmallow that adds additional features to marshmallow.
-- [SQLAlchemy](https://www.sqlalchemy.org/library.html) is the Python SQL toolkit and Object Relational Mapper that gives application developers the full power and flexibility of SQL.
-- [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) is an extension for Flask that adds support for SQLAlchemy to your application. It aims to simplify using SQLAlchemy with Flask.
-- [Alembic](http://alembic.zzzcomputing.com/)
-- [PyMongo](https://pymongo.readthedocs.io/en/stable/index.html) is a Python distribution containing tools for working with MongoDB, and is the recommended way to work with MongoDB from Python.
-- [Flask-PyMongo](https://flask-pymongo.readthedocs.io/en/latest/)
-- [Celery](https://docs.celeryproject.org/en/latest/index.html) is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system. It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+Each example owns its environment variables, database behavior, ports, and
+startup command. Do not install every `requirements.txt` into one environment;
+the examples intentionally have different dependency graphs.
 
-This project integrates other Flask libraries using:
+## Validation
 
-- [Blueprints](https://flask.palletsprojects.com/en/1.0.x/blueprints/) for scalability.
-- [flask_login](https://flask-login.readthedocs.io/en/latest/) for the login system (passwords hashed with bcrypt).
-- [Flask-Script](https://flask-script.readthedocs.io/)
-- [Flask-User](http://flask-user.readthedocs.io/en/v0.6/)
+GitHub Actions runs the supported examples independently:
 
-## Links
+- Python 3.14 clean installs, `pip check`, pytest, and advisory audits for the
+  authentication, Bootstrap, and Connexion examples.
+- A production-image build and containerized browser/test run for
+  `flask-mongo-celery`, plus an audit of its lock.
+- Renovate configuration validation.
 
-- https://flask.palletsprojects.com/en/1.1.x/
-- https://github.com/humiaozuzu/awesome-flask#readme
+When changing a legacy example, add a focused validation gate for that directory
+before treating a dependency update as mergeable.
 
-### Learn
+## Dependency contract
 
-- https://flask.palletsprojects.com/en/1.1.x/api/#api
-- https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
-- https://blog.appseed.us/flask-how-to-code-simple-tasks/
+Four modern examples use `pip-compile`:
 
-## Server Architecture
+```text
+requirements.in  -> direct dependency intent
+requirements.txt -> generated, fully resolved lock
+```
 
-YES!!!
+Edit the `.in` file and regenerate its matching lock with Python 3.14:
 
-## 🤝 Contributing
+```sh
+python -m pip install pip-tools pip-audit==2.10.1
+pip-compile --upgrade --resolver=backtracking --strip-extras \
+  --output-file=requirements.txt requirements.in
+python -m pip check
+python -m pytest -q
+python -m pip_audit -r requirements.txt
+```
 
-1. Fork this repository;
-2. Create your branch: `git checkout -b my-new-feature`;
-3. Commit your changes: `git commit -m 'Add some feature'`;
-4. Push to the branch: `git push origin my-new-feature`.
+Renovate is configured to update those source files through its `pip-compile`
+manager. Direct edits to transitive pins in generated `requirements.txt` files
+are disabled because they can violate exact dependency constraints.
 
-**After your pull request is merged**, you can safely delete your branch.
+The `flask-bootstrap` templates still load Bootstrap 4. Popper 2 updates are
+held until that template and data-attribute migration is performed as one
+browser-tested Bootstrap 5 change. Bootstrap 4 expects the Popper 1 dependency
+line; merely changing the CDN URL to a newer Popper 2 release is not compatible.
 
-## 📝 License
+The raw requirement files in legacy examples remain independently managed until
+those directories are migrated to a reproducible lock format.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
+## Repository layout
+
+Each example generally contains some combination of:
+
+```text
+app/ or app.py       Flask application code
+requirements.in      Direct Python dependency pins
+requirements.txt     Installed or generated dependency set
+Dockerfile           Container runtime contract
+test/ or tests/      Example-local validation
+README.md             Example-local setup and limitations
+```
+
+## Contributing
+
+Keep pull requests scoped to one example or one repository-wide maintenance
+contract. State which examples were exercised, preserve generated-lock
+provenance, and do not use a passing test from one directory as evidence for
+another.
+
+## License
+
+See [LICENSE.md](./LICENSE.md).

@@ -1,5 +1,27 @@
 {
-  "extends": [
-    "config:base"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "pip-compile": {
+    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"]
+  },
+  "packageRules": [
+    {
+      "description": "Update generated Python locks through their requirements.in inputs",
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": [
+        "flask-auth-dash-bootstrap/requirements.txt",
+        "flask-bootstrap/requirements.txt",
+        "flask-connextion-rest/requirements.txt",
+        "flask-mongo-celery/requirements.txt"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Hold Popper 2 until the Flask Bootstrap templates migrate from Bootstrap 4",
+      "matchManagers": ["html"],
+      "matchFileNames": ["flask-bootstrap/app/templates/*.html"],
+      "matchPackageNames": ["popper.js"],
+      "enabled": false
+    }
   ]
 }
