@@ -1,47 +1,71 @@
-version: '3'
 services:
   broker-rabbitmq:
-    image: "rabbitmq:3.8.16-management"
+    image: "rabbitmq:4.1-management"
     environment:
-      - RABBITMQ_DEFAULT_USER=rabbit_user
-      - RABBITMQ_DEFAULT_PASS=rabbit_password
+      RABBITMQ_DEFAULT_USER: rabbit_user
+      RABBITMQ_DEFAULT_PASS: rabbit_password
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   db-postgres:
-    image: "postgres:13.3"
+    image: "postgres:18.4"
     environment:
-      - POSTGRES_USER=db_user
-      - POSTGRES_PASSWORD=db_password
+      POSTGRES_DB: flask_deploy
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_password
+    volumes:
+      - pgdata18:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U db_user -d flask_deploy"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   migration:
     build: .
     environment:
-      - APP_ENV=${APP_ENV}
-    command: flask db upgrade
+      APP_ENV: Production
+    command: flask --app app:create_app init-db
     depends_on:
-      - db-postgres
+      db-postgres:
+        condition: service_healthy
   api:
     build: .
     ports:
-     - "5000:5000"
+      - "5000:5000"
     environment:
-      - APP_ENV=${APP_ENV}
+      APP_ENV: Production
     depends_on:
-      - broker-rabbitmq
-      - db-postgres
-      - migration
+      broker-rabbitmq:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/healthz')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   api-worker:
     build: .
-    command: celery worker --workdir=. -A tasks.celery --loglevel=info
+    command: celery --app tasks.celery worker --loglevel=info
     environment:
-      - APP_ENV=${APP_ENV}
+      APP_ENV: Production
     depends_on:
-      - broker-rabbitmq
-      - db-postgres
-      - migration
+      broker-rabbitmq:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
   api-beat:
     build: .
-    command: celery beat -A tasks.celery --loglevel=info
+    command: celery --app tasks.celery beat --loglevel=info
     environment:
-      - APP_ENV=${APP_ENV}
+      APP_ENV: Production
     depends_on:
-      - broker-rabbitmq
-      - db-postgres
-      - migration
+      broker-rabbitmq:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata18:

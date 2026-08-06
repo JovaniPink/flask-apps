@@ -1,4 +1,3 @@
-import time
 from flask import jsonify
 from flask_restful import Api, Resource
 from tasks import celery
@@ -21,7 +20,7 @@ class DataProcessingAPI(Resource):
 
 @celery.task()
 def process_data():
-    time.sleep(60)
+    return {'status': 'processed'}
 
 
 # data processing endpoint

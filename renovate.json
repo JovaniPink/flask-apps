@@ -12,7 +12,8 @@
         "flask-auth-dash-bootstrap/requirements.txt",
         "flask-bootstrap/requirements.txt",
         "flask-connextion-rest/requirements.txt",
-        "flask-mongo-celery/requirements.txt"
+        "flask-mongo-celery/requirements.txt",
+        "flask-sql-celery/requirements.txt"
       ],
       "enabled": false
     },

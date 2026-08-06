@@ -1,15 +1,21 @@
-FROM python:3.9.5
+FROM python:3.14.7-slim
 
-RUN pip install pipenv
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-ADD . /flask-deploy
+WORKDIR /app
 
-WORKDIR /flask-deploy
+COPY requirements.txt ./
+RUN python -m pip install --disable-pip-version-check --no-cache-dir \
+    -r requirements.txt
 
-RUN pipenv install --system --skip-lock
+COPY . ./
 
-RUN pip install gunicorn[gevent]
+RUN useradd --create-home --uid 10001 appuser \
+    && chown -R appuser:appuser /app
+
+USER appuser
 
 EXPOSE 5000
 
-CMD gunicorn --worker-class gevent --workers 8 --bind 0.0.0.0:5000 wsgi:app --max-requests 10000 --timeout 5 --keep-alive 5 --log-level info
+CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:5000", "wsgi:app"]
