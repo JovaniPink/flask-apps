@@ -15,7 +15,7 @@ installable monolith.
 | `flask-auth` | Small authentication-webhook prototype | Legacy; modernization required |
 | `flask-dash-bootstrap` | Dash and Bootstrap prototype | Legacy Python 3.9/Pipenv |
 | `flask-graphene-sqlalchemy` | GraphQL and SQLAlchemy prototype | Legacy Python 3.9/Pipenv |
-| `flask-sql-celery` | SQL-backed Celery deployment prototype | Legacy Python 3.9.5/Pipenv |
+| `flask-sql-celery` | SQL-backed Celery deployment prototype | Python 3.14, locked and Compose-tested |
 
 “Legacy” means the directory is preserved as a reference and is not covered by
 the repository CI matrix. Do not infer current production readiness from its
@@ -44,8 +44,8 @@ GitHub Actions runs the supported examples independently:
 
 - Python 3.14 clean installs, `pip check`, pytest, and advisory audits for the
   authentication, Bootstrap, and Connexion examples.
-- A production-image build and containerized browser/test run for
-  `flask-mongo-celery`, plus an audit of its lock.
+- Production-image builds and containerized integration runs for
+  `flask-mongo-celery` and `flask-sql-celery`, plus audits of their locks.
 - Renovate configuration validation.
 
 When changing a legacy example, add a focused validation gate for that directory
@@ -53,7 +53,7 @@ before treating a dependency update as mergeable.
 
 ## Dependency contract
 
-Four modern examples use `pip-compile`:
+Five modern examples use `pip-compile`:
 
 ```text
 requirements.in  -> direct dependency intent

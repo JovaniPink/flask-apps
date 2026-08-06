@@ -1,5 +1,6 @@
 import logging
 import os
+import click
 import config
 from api import api
 
@@ -29,6 +30,16 @@ def create_app():
     @app.route('/')
     def hello_world():
         return 'Hello, World!'
+
+    @app.get('/healthz')
+    def healthcheck():
+        return {'status': 'ok'}
+
+    @app.cli.command('init-db')
+    def init_db():
+        """Create the example schema after PostgreSQL is ready."""
+        db.create_all()
+        click.echo('Database initialized.')
 
     return app
 
