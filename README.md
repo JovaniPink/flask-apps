@@ -21,7 +21,7 @@ together.
 | --- | --- | --- |
 | [`flask-auth-dash-bootstrap`](flask-auth-dash-bootstrap/) | Flask authentication, SQLAlchemy, migrations, and an embedded Dash application | Python install, dependency check, pytest, and security audit |
 | [`flask-bootstrap`](flask-bootstrap/) | Server-rendered Flask application with user and administration flows | Python install, dependency check, pytest, and security audit |
-| [`flask-connextion-rest`](flask-connextion-rest/) | Connexion/OpenAPI API with Flask, SQLAlchemy, and Marshmallow | Python install, dependency check, contract tests, and security audit |
+| [`flask-connextion-rest`](flask-connextion-rest/) | Connexion/OpenAPI API with request, response, and persistence constraints across Flask, SQLAlchemy, and Marshmallow | Python install, dependency check, OpenAPI and contract tests, and security audit |
 | [`flask-mongo-celery`](flask-mongo-celery/) | Flask, MongoDB-oriented data access, and Celery background work | Dependency audit plus container build and containerized tests |
 | [`flask-sql-celery`](flask-sql-celery/) | Flask, SQLAlchemy, Celery, and a composed service stack | Python tests, dependency audit, Compose validation, build, startup, and health check |
 
@@ -100,7 +100,7 @@ not evidence that another sample or an archival directory is supported.
 
 - Keep application dependencies isolated; do not introduce a repository-wide Python environment.
 - Keep OpenAPI, request validation, persistence, and serialization boundaries explicit in API
-  samples.
+  samples; update those contracts together.
 - Exercise worker-backed applications through their container or Compose boundary, not only unit
   tests that bypass infrastructure.
 - Treat `requirements.txt` as a generated, reviewable artifact and audit the exact lock that ships.

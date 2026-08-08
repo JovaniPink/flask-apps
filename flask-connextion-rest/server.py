@@ -11,7 +11,11 @@ def create_app(extra_config=None):
     connexion_app = connexion.FlaskApp(__name__, specification_dir=basedir)
     app = connexion_app.app
     configure_app(app, extra_config)
-    connexion_app.add_api("swagger.yml")
+    connexion_app.add_api(
+        "swagger.yml",
+        strict_validation=True,
+        validate_responses=True,
+    )
 
     # Import model metadata before creating the sample application's tables.
     import models  # noqa: F401
