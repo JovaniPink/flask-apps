@@ -3,7 +3,7 @@ This is the people module and supports all the REST actions for the
 people data
 """
 
-from flask import make_response, abort
+from flask import abort
 from config import db
 from models import Person, PersonSchema, Note
 
@@ -140,7 +140,7 @@ def delete(person_id):
     if person is not None:
         db.session.delete(person)
         db.session.commit()
-        return make_response(f"Person {person_id} deleted", 200)
+        return {"message": f"Person {person_id} deleted"}, 200
 
     # Otherwise, nope, didn't find that person
     else:

@@ -16,9 +16,14 @@ class Person(db.Model):
     __tablename__ = "person"
 
     person_id = db.Column(db.Integer, primary_key=True)
-    lname = db.Column(db.String(32))
-    fname = db.Column(db.String(32))
-    timestamp = db.Column(db.DateTime, default=utc_now, onupdate=utc_now)
+    lname = db.Column(db.String(32), nullable=False)
+    fname = db.Column(db.String(32), nullable=False)
+    timestamp = db.Column(
+        db.DateTime,
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
     notes = db.relationship(
         "Note",
         backref="person",
@@ -32,9 +37,18 @@ class Note(db.Model):
     __tablename__ = "note"
 
     note_id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey("person.person_id"))
+    person_id = db.Column(
+        db.Integer,
+        db.ForeignKey("person.person_id"),
+        nullable=False,
+    )
     content = db.Column(db.String, nullable=False)
-    timestamp = db.Column(db.DateTime, default=utc_now, onupdate=utc_now)
+    timestamp = db.Column(
+        db.DateTime,
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
 
 
 class PersonNoteSchema(Schema):
@@ -67,4 +81,5 @@ class NoteSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
         sqla_session = db.session
 
+    person_id = fields.Int(dump_only=True)
     person = fields.Nested(NotePersonSchema, dump_default=None)

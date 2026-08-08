@@ -1,14 +1,67 @@
 swagger: "2.0"
 info:
-  description: This is the swagger file that goes with our server code
-  version: "1.0.0"
-  title: Swagger Rest Article
+  description: Contract for the people and notes reference API.
+  version: "1.1.0"
+  title: Flask Connexion People API
 consumes:
   - application/json
 produces:
   - application/json
 
 basePath: /api
+
+definitions:
+  PersonCreate:
+    type: object
+    additionalProperties: false
+    required:
+      - fname
+      - lname
+    properties:
+      fname:
+        type: string
+        minLength: 1
+        maxLength: 32
+        description: First name of the person.
+      lname:
+        type: string
+        minLength: 1
+        maxLength: 32
+        description: Last name of the person.
+  PersonUpdate:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    properties:
+      fname:
+        type: string
+        minLength: 1
+        maxLength: 32
+        description: Updated first name of the person.
+      lname:
+        type: string
+        minLength: 1
+        maxLength: 32
+        description: Updated last name of the person.
+  NoteWrite:
+    type: object
+    additionalProperties: false
+    required:
+      - content
+    properties:
+      content:
+        type: string
+        minLength: 1
+        description: Text content of the note.
+  DeleteResponse:
+    type: object
+    additionalProperties: false
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: Confirmation that the resource was deleted.
 
 # Paths supported by the server application
 paths:
@@ -20,7 +73,7 @@ paths:
       summary: Read the entire set of people, sorted by last name
       description: Read the entire set of people, sorted by last name
       responses:
-        200:
+        "200":
           description: Successfully read people set operation
           schema:
             type: array
@@ -67,16 +120,9 @@ paths:
           description: Person to create
           required: True
           schema:
-            type: object
-            properties:
-              fname:
-                type: string
-                description: First name of person to create
-              lname:
-                type: string
-                description: Last name of person to create
+            $ref: "#/definitions/PersonCreate"
       responses:
-        201:
+        "201":
           description: Successfully created person
           schema:
             properties:
@@ -107,13 +153,13 @@ paths:
           type: integer
           required: True
       responses:
-        200:
+        "200":
           description: Successfully read person from people data operation
           schema:
             type: object
             properties:
               person_id:
-                type: string
+                type: integer
                 description: Id of the person
               fname:
                 type: string
@@ -155,17 +201,11 @@ paths:
           required: True
         - name: person
           in: body
+          required: True
           schema:
-            type: object
-            properties:
-              fname:
-                type: string
-                description: First name of the person
-              lname:
-                type: string
-                description: Last name of the person
+            $ref: "#/definitions/PersonUpdate"
       responses:
-        200:
+        "200":
           description: Successfully updated person
           schema:
             properties:
@@ -195,8 +235,10 @@ paths:
           description: Id of the person to delete
           required: true
       responses:
-        200:
+        "200":
           description: Successfully deleted a person
+          schema:
+            $ref: "#/definitions/DeleteResponse"
 
   /notes:
     get:
@@ -206,7 +248,7 @@ paths:
       summary: Read the entire set of notes for all people, sorted by timestamp
       description: Read the entire set of notes for all people, sorted by timestamp
       responses:
-        200:
+        "200":
           description: Successfully read notes for all people operation
           schema:
             type: array
@@ -256,13 +298,9 @@ paths:
           description: Text content of the note to create
           required: True
           schema:
-            type: object
-            properties:
-              content:
-                type: string
-                description: Text of the note to create
+            $ref: "#/definitions/NoteWrite"
       responses:
-        201:
+        "201":
           description: Successfully created a note
           schema:
             properties:
@@ -298,7 +336,7 @@ paths:
           type: integer
           required: True
       responses:
-        200:
+        "200":
           description: Successfully read note for a person
           schema:
             type: object
@@ -335,19 +373,16 @@ paths:
           required: True
         - name: note
           in: body
+          required: True
           schema:
-            type: object
-            properties:
-              content:
-                type: string
-                description: Text content of the note to updated
+            $ref: "#/definitions/NoteWrite"
       responses:
-        200:
+        "200":
           description: Successfully updated note
           schema:
             properties:
               note_id:
-                type: string
+                type: integer
                 description: Id of the note associated with a person
               person_id:
                 type: integer
@@ -377,7 +412,7 @@ paths:
           type: integer
           required: True
       responses:
-        200:
+        "200":
           description: Successfully deleted a note
-
-
+          schema:
+            $ref: "#/definitions/DeleteResponse"
