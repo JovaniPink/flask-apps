@@ -38,6 +38,9 @@ for application in "${APPLICATIONS[@]}"; do
   output_file="requirements.txt"
   if [[ -n "$temporary_directory" ]]; then
     output_file="$temporary_directory/$application-requirements.txt"
+    # Seed uv with the committed lock so --check verifies the reviewed solution
+    # instead of upgrading unrelated transitive packages released afterward.
+    cp "$lock_file" "$output_file"
   fi
 
   (
