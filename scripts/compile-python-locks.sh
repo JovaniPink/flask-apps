@@ -6,7 +6,7 @@ readonly EXPECTED_UV_VERSION="0.12.3"
 readonly TARGET_PLATFORM="linux"
 readonly TARGET_PYTHON_VERSION="3.14"
 readonly REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly COMPILE_COMMAND="uv pip compile --python-platform $TARGET_PLATFORM --python-version $TARGET_PYTHON_VERSION --annotation-style split --no-emit-package setuptools --output-file requirements.txt requirements.in"
+readonly COMPILE_COMMAND="uv pip compile --python-version=$TARGET_PYTHON_VERSION --no-emit-package=setuptools --output-file=requirements.txt requirements.in"
 readonly APPLICATIONS=(
   "flask-auth-dash-bootstrap"
   "flask-bootstrap"
@@ -45,9 +45,8 @@ for application in "${APPLICATIONS[@]}"; do
     uv pip compile \
       --quiet \
       --python-platform "$TARGET_PLATFORM" \
-      --python-version "$TARGET_PYTHON_VERSION" \
-      --annotation-style split \
-      --no-emit-package setuptools \
+      --python-version="$TARGET_PYTHON_VERSION" \
+      --no-emit-package=setuptools \
       --custom-compile-command "$COMPILE_COMMAND" \
       --output-file="$output_file" \
       requirements.in

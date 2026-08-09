@@ -54,7 +54,8 @@ CI runs the same check on Ubuntu and rejects stale or non-reproducible locks.
 
 The `uv` version is also pinned in [`renovate.json`](renovate.json). Keep the lock header's
 `uv pip compile` command intact: Renovate reads that command to find each `requirements.in` source
-and regenerate its paired lock.
+and regenerate its paired lock on Linux. The repository wrapper adds an explicit Linux target for
+cross-platform development; the header contains only options supported by Renovate's parser.
 
 ## Run an Application Locally
 
