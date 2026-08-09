@@ -50,7 +50,9 @@ PATH="$PWD/.lock-venv/bin:$PATH" ./scripts/compile-python-locks.sh
 The script always resolves for Linux and Python 3.14, even when run on macOS, so
 environment-marked dependencies such as SQLAlchemy's `greenlet` support remain in the deployment
 artifacts. Its `--check` mode compiles into a temporary directory and never rewrites the checkout.
-CI runs the same check on Ubuntu and rejects stale or non-reproducible locks.
+The temporary output starts from the committed lock, so CI verifies that the reviewed solution is
+still valid without silently upgrading unrelated transitive dependencies. CI runs the same check on
+Ubuntu and rejects stale or non-reproducible locks.
 
 The `uv` version is also pinned in [`renovate.json`](renovate.json). Keep the lock header's
 `uv pip compile` command intact: Renovate reads that command to find each `requirements.in` source
