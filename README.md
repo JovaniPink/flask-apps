@@ -13,7 +13,7 @@ together.
 - Python 3.14
 - Docker for container-backed applications
 - Docker Compose for the SQL/Celery integration stack
-- `pip-tools`-compiled dependency locks
+- `uv`-compiled Linux dependency locks
 
 ## Maintained Applications
 
@@ -36,24 +36,25 @@ Maintained applications use two coordinated files:
 - `requirements.in` is the reviewed source of direct dependency pins.
 - `requirements.txt` is the complete compiled installation artifact used by CI and containers.
 
-Change both files together. Compile locks in Linux so environment-marked dependencies such as
+Change both files together. Generate locks for Linux so environment-marked dependencies such as
 SQLAlchemy's `greenlet` support are preserved for CI and production containers.
 
-Regenerate every maintained application lock with the repository script and the validated
-generator pair:
+Regenerate every maintained application lock with the repository script and the pinned generator:
 
 ```bash
 python3.14 -m venv .lock-venv
-.lock-venv/bin/python -m pip install pip==26.0.1 pip-tools==7.6.0
+.lock-venv/bin/python -m pip install uv==0.12.3
 PATH="$PWD/.lock-venv/bin:$PATH" ./scripts/compile-python-locks.sh
 ```
 
-The pip and `pip-tools` pins above describe the current reproducible generator pair. Update them
-together only after verifying that `python -m piptools compile --help` succeeds: `pip-tools` uses
-pip internals, so the latest releases are not automatically compatible. Run the generator on
-Linux before committing because environment-marked dependencies such as SQLAlchemy's `greenlet`
-support can differ by platform. CI runs the same script with `--check` on Ubuntu and rejects stale
-or non-reproducible locks.
+The script always resolves for Linux and Python 3.14, even when run on macOS, so
+environment-marked dependencies such as SQLAlchemy's `greenlet` support remain in the deployment
+artifacts. Its `--check` mode compiles into a temporary directory and never rewrites the checkout.
+CI runs the same check on Ubuntu and rejects stale or non-reproducible locks.
+
+The `uv` version is also pinned in [`renovate.json`](renovate.json). Keep the lock header's
+`uv pip compile` command intact: Renovate reads that command to find each `requirements.in` source
+and regenerate its paired lock.
 
 ## Run an Application Locally
 
@@ -120,7 +121,7 @@ Core project documentation:
 
 1. Work in one application scope.
 2. Update its source dependency file and compiled lock together when dependencies change.
-3. Run `./scripts/compile-python-locks.sh --check` on Linux, then run the application-specific
+3. Run `./scripts/compile-python-locks.sh --check`, then run the application-specific
    tests, dependency check, audit, and container gates.
 4. Document whether the change affects only one sample or a shared repository contract.
 5. Open a focused pull request with the exact validation evidence.

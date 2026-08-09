@@ -2,10 +2,11 @@
 
 set -euo pipefail
 
-readonly EXPECTED_PIP_VERSION="26.0.1"
-readonly EXPECTED_PIP_TOOLS_VERSION="7.6.0"
-readonly EXPECTED_PYTHON_VERSION="3.14"
+readonly EXPECTED_UV_VERSION="0.12.3"
+readonly TARGET_PLATFORM="linux"
+readonly TARGET_PYTHON_VERSION="3.14"
 readonly REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly COMPILE_COMMAND="uv pip compile --python-platform $TARGET_PLATFORM --python-version $TARGET_PYTHON_VERSION --annotation-style split --no-emit-package setuptools --output-file requirements.txt requirements.in"
 readonly APPLICATIONS=(
   "flask-auth-dash-bootstrap"
   "flask-bootstrap"
@@ -19,29 +20,9 @@ if [[ $# -gt 1 || ( $# -eq 1 && "$1" != "--check" ) ]]; then
   exit 64
 fi
 
-actual_python_version="$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-if [[ "$actual_python_version" != "$EXPECTED_PYTHON_VERSION" ]]; then
-  echo "Python $EXPECTED_PYTHON_VERSION is required; found $actual_python_version" >&2
-  exit 1
-fi
-
-actual_pip_version="$(python -m pip --version | awk '{print $2}')"
-
-if [[ "$actual_pip_version" != "$EXPECTED_PIP_VERSION" ]]; then
-  echo "pip $EXPECTED_PIP_VERSION is required; found $actual_pip_version" >&2
-  exit 1
-fi
-
-if ! pip_tools_version_output="$(python -m piptools compile --version 2>&1)"; then
-  echo "pip-tools could not run with pip $actual_pip_version:" >&2
-  echo "$pip_tools_version_output" >&2
-  exit 1
-fi
-
-actual_pip_tools_version="$(awk '{print $NF}' <<<"$pip_tools_version_output")"
-
-if [[ "$actual_pip_tools_version" != "$EXPECTED_PIP_TOOLS_VERSION" ]]; then
-  echo "pip-tools $EXPECTED_PIP_TOOLS_VERSION is required; found $actual_pip_tools_version" >&2
+actual_uv_version="$(uv --version | awk '{print $2}')"
+if [[ "$actual_uv_version" != "$EXPECTED_UV_VERSION" ]]; then
+  echo "uv $EXPECTED_UV_VERSION is required; found $actual_uv_version" >&2
   exit 1
 fi
 
@@ -61,11 +42,14 @@ for application in "${APPLICATIONS[@]}"; do
 
   (
     cd "$REPOSITORY_ROOT/$application"
-    CUSTOM_COMPILE_COMMAND="./scripts/compile-python-locks.sh" \
-      python -m piptools compile \
+    uv pip compile \
       --quiet \
+      --python-platform "$TARGET_PLATFORM" \
+      --python-version "$TARGET_PYTHON_VERSION" \
+      --annotation-style split \
+      --no-emit-package setuptools \
+      --custom-compile-command "$COMPILE_COMMAND" \
       --output-file="$output_file" \
-      --strip-extras \
       requirements.in
   )
 
