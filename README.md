@@ -39,19 +39,21 @@ Maintained applications use two coordinated files:
 Change both files together. Compile locks in Linux so environment-marked dependencies such as
 SQLAlchemy's `greenlet` support are preserved for CI and production containers.
 
-For example, to regenerate the Connexion API lock with the currently validated toolchain:
+Regenerate every maintained application lock with the repository script and the validated
+generator pair:
 
 ```bash
-docker run --rm \
-  --volume "$PWD/flask-connextion-rest:/work" \
-  --workdir /work \
-  python:3.14-slim \
-  sh -c 'python -m pip install pip==26.0.1 pip-tools==7.6.0 && pip-compile --output-file=requirements.txt --strip-extras requirements.in'
+python3.14 -m venv .lock-venv
+.lock-venv/bin/python -m pip install pip==26.0.1 pip-tools==7.6.0
+PATH="$PWD/.lock-venv/bin:$PATH" ./scripts/compile-python-locks.sh
 ```
 
 The pip and `pip-tools` pins above describe the current reproducible generator pair. Update them
-together after validating compatibility; do not regenerate a Linux lock on macOS and assume the
-result contains the same platform dependencies.
+together only after verifying that `python -m piptools compile --help` succeeds: `pip-tools` uses
+pip internals, so the latest releases are not automatically compatible. Run the generator on
+Linux before committing because environment-marked dependencies such as SQLAlchemy's `greenlet`
+support can differ by platform. CI runs the same script with `--check` on Ubuntu and rejects stale
+or non-reproducible locks.
 
 ## Run an Application Locally
 
@@ -118,7 +120,8 @@ Core project documentation:
 
 1. Work in one application scope.
 2. Update its source dependency file and compiled lock together when dependencies change.
-3. Run the application-specific tests, dependency check, audit, and container gates.
+3. Run `./scripts/compile-python-locks.sh --check` on Linux, then run the application-specific
+   tests, dependency check, audit, and container gates.
 4. Document whether the change affects only one sample or a shared repository contract.
 5. Open a focused pull request with the exact validation evidence.
 
