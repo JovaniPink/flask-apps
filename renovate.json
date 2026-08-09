@@ -6,7 +6,13 @@
     "uv": "==0.12.3"
   },
   "pip-compile": {
-    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"]
+    "managerFilePatterns": [
+      "/^flask-auth-dash-bootstrap/requirements\\.txt$/",
+      "/^flask-bootstrap/requirements\\.txt$/",
+      "/^flask-connextion-rest/requirements\\.txt$/",
+      "/^flask-mongo-celery/requirements\\.txt$/",
+      "/^flask-sql-celery/requirements\\.txt$/"
+    ]
   },
   "packageRules": [
     {
