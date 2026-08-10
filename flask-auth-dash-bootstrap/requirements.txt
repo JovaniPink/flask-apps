@@ -72,7 +72,7 @@ narwhals==2.24.0
     # via plotly
 nest-asyncio==1.6.0
     # via dash
-numpy==2.5.1
+numpy==2.5.2
     # via pandas
 packaging==26.3
     # via
