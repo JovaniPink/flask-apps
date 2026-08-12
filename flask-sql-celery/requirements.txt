@@ -39,7 +39,7 @@ flask-sqlalchemy==3.1.1
     # via
     #   -r requirements.in
     #   flask-migrate
-greenlet==3.5.4
+greenlet==3.5.5
     # via sqlalchemy
 gunicorn==26.0.0
     # via -r requirements.in
@@ -84,7 +84,7 @@ six==1.17.0
     # via
     #   flask-restful
     #   python-dateutil
-sqlalchemy==2.0.51
+sqlalchemy==2.0.52
     # via
     #   alembic
     #   flask-sqlalchemy
