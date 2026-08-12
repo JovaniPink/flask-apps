@@ -101,7 +101,7 @@ soupsieve==2.9.2
     # via beautifulsoup4
 splinter==0.21.0
     # via -r requirements.in
-trio==0.33.0
+trio==0.34.0
     # via
     #   selenium
     #   trio-websocket
