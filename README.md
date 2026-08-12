@@ -22,10 +22,11 @@ together.
 | [`flask-auth-dash-bootstrap`](flask-auth-dash-bootstrap/) | Flask authentication, SQLAlchemy, migrations, and an embedded Dash application | Python install, dependency check, pytest, and security audit |
 | [`flask-bootstrap`](flask-bootstrap/) | Server-rendered Flask application with user and administration flows | Python install, dependency check, pytest, and security audit |
 | [`flask-connextion-rest`](flask-connextion-rest/) | Connexion/OpenAPI API with request, response, and persistence constraints across Flask, SQLAlchemy, and Marshmallow | Python install, dependency check, OpenAPI and contract tests, and security audit |
+| [`flask-dash-bootstrap`](flask-dash-bootstrap/) | Dash Pages application with registry-owned routing, responsive Bootstrap composition, and a production WSGI boundary | Python install, request/layout tests, dependency audit, container build, non-root runtime, and health check |
 | [`flask-mongo-celery`](flask-mongo-celery/) | Flask, MongoDB-oriented data access, and Celery background work | Dependency audit plus container build and containerized tests |
 | [`flask-sql-celery`](flask-sql-celery/) | Flask, SQLAlchemy, Celery, and a composed service stack | Python tests, dependency audit, Compose validation, build, startup, and health check |
 
-The remaining directories are historical or experimental examples. They are useful for reference,
+All other directories are historical or experimental examples. They are useful for reference,
 but they are not covered by the current CI matrix and should not be treated as release-ready until
 they gain an explicit test and dependency-maintenance contract.
 
@@ -90,6 +91,9 @@ Container-backed lanes must also pass their repository workflow commands:
 ```bash
 docker build --tag flask-mongo-celery:test flask-mongo-celery
 docker run --rm flask-mongo-celery:test python -m pytest -q
+
+docker build --tag flask-dash-bootstrap:test flask-dash-bootstrap
+docker run --rm --publish 5000:5000 flask-dash-bootstrap:test
 
 cd flask-sql-celery
 docker compose config --quiet

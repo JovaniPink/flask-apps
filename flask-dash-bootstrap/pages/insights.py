@@ -1,27 +1,24 @@
-# Imports from 3rd party libraries
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash import dcc
 
-# Imports from this application
-from app import app
-
-# 1 column layout
-# https://dash-bootstrap-components.opensource.faculty.ai/l/components/layout
-column1 = dbc.Col(
-    [
-        dcc.Markdown(
-            """
-        
-            ## Insights
-
-
-            """
-        ),
-
-    ],
+dash.register_page(
+    __name__,
+    path="/insights",
+    name="Insights",
+    title="Insight boundary",
+    description="Guidance for adding evidence-backed analytical insights.",
+    order=2,
 )
 
-layout = dbc.Row([column1])
+layout = dbc.Alert(
+    dcc.Markdown(
+        """
+        ## Insights
+
+        Analytical claims belong here only after their source, observation time,
+        transformation, and uncertainty are visible to the reader.
+        """
+    ),
+    color="info",
+)

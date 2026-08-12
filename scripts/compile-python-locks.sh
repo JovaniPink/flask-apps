@@ -11,6 +11,7 @@ readonly APPLICATIONS=(
   "flask-auth-dash-bootstrap"
   "flask-bootstrap"
   "flask-connextion-rest"
+  "flask-dash-bootstrap"
   "flask-mongo-celery"
   "flask-sql-celery"
 )

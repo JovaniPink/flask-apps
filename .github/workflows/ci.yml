@@ -40,6 +40,7 @@ jobs:
           - flask-auth-dash-bootstrap
           - flask-bootstrap
           - flask-connextion-rest
+          - flask-dash-bootstrap
     defaults:
       run:
         working-directory: ${{ matrix.app }}
@@ -55,6 +56,27 @@ jobs:
       - run: python -m pytest -q
       - run: python -m pip install --disable-pip-version-check pip-audit==2.10.1
       - run: python -m pip_audit -r requirements.txt
+
+  dash-bootstrap-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build --tag flask-dash-bootstrap:test .
+        working-directory: flask-dash-bootstrap
+      - run: docker run --detach --name flask-dash-bootstrap --publish 5000:5000 flask-dash-bootstrap:test
+      - run: |
+          for attempt in {1..20}; do
+            if curl --fail --silent --show-error http://127.0.0.1:5000/healthz; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs flask-dash-bootstrap
+          exit 1
+      - run: test "$(docker inspect --format '{{.Config.User}}' flask-dash-bootstrap:test)" = "app"
+      - if: always()
+        run: docker rm --force flask-dash-bootstrap 2>/dev/null || true
 
   mongo-celery:
     runs-on: ubuntu-latest
