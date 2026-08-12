@@ -1,0 +1,7 @@
+dash==4.4.1
+dash-bootstrap-components==2.0.4
+gunicorn==26.0.0
+plotly==6.9.0
+
+# Test tooling
+pytest==9.1.1

@@ -1,44 +1,50 @@
-# Imports from 3rd party libraries
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
-import plotly.express as px
+from dash import dcc
+import plotly.graph_objects as go
 
-# Imports from this application
-from app import app
+dash.register_page(
+    __name__,
+    path="/",
+    name="Overview",
+    title="Dash reference overview",
+    description="A maintained multipage Dash and Bootstrap reference application.",
+    order=0,
+)
 
-# 2 column layout. 1st column width = 4/12
-# https://dash-bootstrap-components.opensource.faculty.ai/l/components/layout
-column1 = dbc.Col(
+figure = go.Figure(
+    data=go.Scatter(
+        x=[1, 2, 3, 4, 5],
+        y=[2, 5, 4, 8, 9],
+        mode="lines+markers",
+        name="Example series",
+        hovertemplate="Step %{x}<br>Value %{y}<extra></extra>",
+    )
+)
+figure.update_layout(
+    title="A small, dependency-light Plotly figure",
+    xaxis_title="Step",
+    yaxis_title="Value",
+    margin={"l": 48, "r": 24, "t": 64, "b": 48},
+)
+
+layout = dbc.Row(
     [
-        dcc.Markdown(
-            """
-        
-            ## Your Value Proposition
+        dbc.Col(
+            [
+                dcc.Markdown(
+                    """
+                    ## A current multipage Dash reference
 
-            Emphasize how the app will benefit users. Don't emphasize the underlying technology.
-
-            ✅ RUN is a running app that adapts to your fitness levels and designs personalized workouts to help you improve your running.
-
-            ❌ RUN is the only intelligent running app that uses sophisticated deep neural net machine learning to make your run smarter because we believe in ML driven workouts.
-
-            """
+                    This sample demonstrates one routing registry, responsive Bootstrap
+                    composition, a production WSGI boundary, and a container health contract.
+                    """
+                ),
+                dbc.Button("See the prediction boundary", href="/predictions", color="primary"),
+            ],
+            lg=4,
         ),
-        dcc.Link(dbc.Button('Your Call To Action', color='primary'), href='/predictions')
+        dbc.Col(dcc.Graph(figure=figure, responsive=True), lg=8),
     ],
-    md=4,
+    class_name="g-4 align-items-center",
 )
-
-gapminder = px.data.gapminder()
-fig = px.scatter(gapminder.query("year==2007"), x="gdpPercap", y="lifeExp", size="pop", color="continent",
-           hover_name="country", log_x=True, size_max=60)
-
-column2 = dbc.Col(
-    [
-        dcc.Graph(figure=fig),
-    ]
-)
-
-layout = dbc.Row([column1, column2])
