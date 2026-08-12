@@ -99,8 +99,11 @@ curl --fail --silent --show-error http://localhost:5000/healthz
 docker compose down --volumes
 ```
 
-The full CI workflow also validates [`renovate.json`](renovate.json). A green job for one sample is
-not evidence that another sample or an archival directory is supported.
+The full CI workflow also validates [`renovate.json`](renovate.json) and runs
+[`scripts/check-hidden-unicode.py`](scripts/check-hidden-unicode.py). The latter rejects invisible
+Unicode formatting and spacing characters in tracked text files; use an explicit HTML entity such
+as `&nbsp;` when non-breaking layout is intentional. A green job for one sample is not evidence that
+another sample or an archival directory is supported.
 
 ## Architecture Principles
 
@@ -125,7 +128,7 @@ Core project documentation:
 1. Work in one application scope.
 2. Update its source dependency file and compiled lock together when dependencies change.
 3. Run `./scripts/compile-python-locks.sh --check`, then run the application-specific
-   tests, dependency check, audit, and container gates.
+   tests, dependency check, audit, container gates, and `python3 scripts/check-hidden-unicode.py`.
 4. Document whether the change affects only one sample or a shared repository contract.
 5. Open a focused pull request with the exact validation evidence.
 
