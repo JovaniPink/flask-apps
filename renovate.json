@@ -3,7 +3,7 @@
   "extends": ["config:recommended"],
   "constraints": {
     "python": "==3.14",
-    "uv": "==0.12.3"
+    "uv": "==0.12.4"
   },
   "pip-compile": {
     "managerFilePatterns": [
