@@ -44,7 +44,7 @@ Regenerate every maintained application lock with the repository script and the 
 
 ```bash
 python3.14 -m venv .lock-venv
-.lock-venv/bin/python -m pip install uv==0.12.3
+.lock-venv/bin/python -m pip install uv==0.12.4
 PATH="$PWD/.lock-venv/bin:$PATH" ./scripts/compile-python-locks.sh
 ```
 
