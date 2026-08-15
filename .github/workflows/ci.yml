@@ -27,7 +27,7 @@ jobs:
           python-version: "3.14"
           cache: pip
           cache-dependency-path: "*/requirements.txt"
-      - run: python -m pip install --disable-pip-version-check uv==0.12.4
+      - run: python -m pip install --disable-pip-version-check uv==0.12.5
       - run: ./scripts/compile-python-locks.sh --check
 
   python:
