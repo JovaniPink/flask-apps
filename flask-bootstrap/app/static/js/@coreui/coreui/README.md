@@ -1,5 +1,11 @@
 # CoreUI - Free WebApp UI Kit built on top of Bootstrap 4 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?text=CoreUI%20-%20Free%20Bootstrap%204%20Admin%20Template%20&url=https://coreui.io&hashtags=bootstrap,admin,template,dashboard,panel,free,angular,react,vue)
 
+> **Repository note:** This directory preserves the upstream CoreUI 2.0.0-beta.2 license and
+> source snapshot for attribution and reference only. Its historical Node 6, Babel, Rollup, and
+> node-sass package manifest was intentionally removed. Do not install or rebuild this vendored
+> snapshot in this repository; the installation and build instructions below are archival upstream
+> documentation, not a supported repository workflow.
+
 Please help us on [Product Hunt](https://www.producthunt.com/posts/coreui-open-source-bootstrap-4-admin-template-with-angular-2-react-js-vue-js-support) and [Designer News](https://www.designernews.co/stories/81127). Thanks in advance!
 
 Curious why I decided to create CoreUI? Please read this article: [Jack of all trades, master of none. Why Bootstrap Admin Templates suck.](https://medium.com/@lukaszholeczek/jack-of-all-trades-master-of-none-5ea53ef8a1f#.7eqx1bcd8)

@@ -108,8 +108,9 @@ with [`scripts/check-hidden-unicode.py`](scripts/check-hidden-unicode.py), and v
 vendored browser bundles retain only runtime assets and attribution with
 [`scripts/check-vendored-assets.py`](scripts/check-vendored-assets.py). Use an explicit HTML entity
 such as `&nbsp;` when non-breaking layout is intentional. Do not restore or run the removed flag-icon
-Grunt/Yarn/Bower graph or the CoreUI tooltip Babel/Uglify graph. A green job for one sample is not
-evidence that another sample or an archival directory is supported.
+Grunt/Yarn/Bower graph, the CoreUI tooltip Babel/Uglify graph, or the duplicate CoreUI
+Babel/Rollup/node-sass graphs. A green job for one sample is not evidence that another sample or an
+archival directory is supported.
 
 Owned sample containers retain readable image tags and pin the reviewed multi-platform digest.
 The maintained Flask Bootstrap sample likewise uses exact jQuery and Highcharts CDN versions with
