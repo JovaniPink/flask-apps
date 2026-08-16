@@ -111,6 +111,11 @@ such as `&nbsp;` when non-breaking layout is intentional. Do not restore or run 
 Grunt/Yarn/Bower graph or the CoreUI tooltip Babel/Uglify graph. A green job for one sample is not
 evidence that another sample or an archival directory is supported.
 
+Owned sample containers retain readable image tags and pin the reviewed multi-platform digest.
+The maintained Flask Bootstrap sample likewise uses exact jQuery and Highcharts CDN versions with
+Subresource Integrity and response-level browser security headers. Update a tag/version, digest,
+integrity hash, validation contract, and runtime test together.
+
 ## Architecture Principles
 
 - Keep application dependencies isolated; do not introduce a repository-wide Python environment.
