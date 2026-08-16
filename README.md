@@ -105,11 +105,11 @@ docker compose down --volumes
 
 The full CI workflow also validates [`renovate.json`](renovate.json), rejects invisible Unicode
 with [`scripts/check-hidden-unicode.py`](scripts/check-hidden-unicode.py), and verifies that the
-vendored flag bundle contains only its compiled CSS, SVG assets, documentation, and license with
+vendored browser bundles retain only runtime assets and attribution with
 [`scripts/check-vendored-assets.py`](scripts/check-vendored-assets.py). Use an explicit HTML entity
-such as `&nbsp;` when non-breaking layout is intentional. Do not install or rebuild the removed
-flag-icon Grunt/Yarn/Bower toolchain. A green job for one sample is not evidence that another sample
-or an archival directory is supported.
+such as `&nbsp;` when non-breaking layout is intentional. Do not restore or run the removed flag-icon
+Grunt/Yarn/Bower graph or the CoreUI tooltip Babel/Uglify graph. A green job for one sample is not
+evidence that another sample or an archival directory is supported.
 
 ## Architecture Principles
 
