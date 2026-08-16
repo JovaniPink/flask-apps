@@ -1,20 +1,12 @@
 # flag-icon-css
 
-[![npm version](https://badge.fury.io/js/flag-icon-css.svg)](https://badge.fury.io/js/flag-icon-css)
-[![Bower version](https://badge.fury.io/bo/flag-icon-css.svg)](https://badge.fury.io/bo/flag-icon-css)
+This directory retains the audited, compiled CSS and SVG assets from
+`flag-icon-css` 3.0.0. The upstream MIT license remains in `LICENSE`.
 
-A collection of all country flags in SVG — plus the CSS for easier integration.
-See the [demo](http://lipis.github.io/flag-icon-css/).
-
-Install
--------
-You can either [download](https://github.com/lipis/flag-icon-css/archive/master.zip)
-the whole project as is or install it via Bower or NPM:
-
-```bash
-$ bower install flag-icon-css
-$ npm install flag-icon-css
-```
+The historical Grunt, Yarn, Bower, Less, Sass, SVGO, and documentation build
+sources are intentionally not vendored. They are not needed at runtime and must
+not be installed or rebuilt from this directory. Replace the compiled asset set
+from a reviewed upstream release if it ever needs to change.
 
 ## Usage
 
@@ -42,34 +34,6 @@ background-repeat: no-repeat;
 Which means that the flag is just going to appear in the middle of an element, so
 you will have to set manually the correct size of 4 by 3 ratio or if it's squared
 add also the `flag-icon-squared` class.
-
-## Development
-
-Run the `npm install` to install the dependencies after cloning the project and
-you'll be able to:
-
-To watch for changes and live reload if served
-
-```bash
-$ grunt
-```
-
-To build `*.less` files
-
-```bash
-$ grunt build
-```
-
-To serve it on `localhost:8000`
-
-```bash
-$ grunt connect
-```
-
-To have only specific countries in the css file, remove the ones that you don't
-need from the
-[`flag-icon-list.less`](https://github.com/lipis/flag-icon-css/blob/master/less/flag-icon-list.less)
-file and build it again.
 
 ## Credits
 
