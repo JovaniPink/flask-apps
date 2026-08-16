@@ -67,3 +67,25 @@ def test_page_urls(app, client):
     response = client.get('/user/sign-out', follow_redirects=True)
     assert response.status_code==200
     assert b"Sign In / Signup" in response.data
+
+
+def test_browser_supply_chain_contract(client):
+    response = client.get('/', follow_redirects=True)
+    page = response.get_data(as_text=True)
+    policy = response.headers["Content-Security-Policy"]
+
+    assert response.headers["Referrer-Policy"] == "strict-origin-when-cross-origin"
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+    assert response.headers["X-Frame-Options"] == "DENY"
+    assert "default-src 'self'" in policy
+    assert "frame-ancestors 'none'" in policy
+    assert "object-src 'none'" in policy
+    assert "https://code.jquery.com" in policy
+    assert "https://cdn.jsdelivr.net" in policy
+
+    assert page.count("https://code.jquery.com/jquery-3.7.1.min.js") == 1
+    assert "ajax.googleapis.com/ajax/libs/jquery" not in page
+    assert "jquery-3.2.1" not in page
+    assert page.count("https://cdn.jsdelivr.net/npm/highcharts@12.4.0/") == 3
+    assert "https://code.highcharts.com/" not in page
+    assert page.count('integrity="sha384-') == 4

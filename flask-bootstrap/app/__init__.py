@@ -15,6 +15,21 @@ mail = Mail()
 migrate = Migrate()
 security = Security()
 
+CONTENT_SECURITY_POLICY = "; ".join(
+    (
+        "default-src 'self'",
+        "base-uri 'self'",
+        "connect-src 'self' https://cdn.rawgit.com",
+        "font-src 'self' data: https://fonts.gstatic.com",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+        "img-src 'self' data: https:",
+        "object-src 'none'",
+        "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    )
+)
+
 
 def create_app(extra_config_settings=None):
     """Create and configure the Flask application."""
@@ -26,6 +41,14 @@ def create_app(extra_config_settings=None):
     app.config.from_object('app.settings')
     # Load extra config settings from 'extra_config_settings' param
     app.config.update(extra_config_settings or {})
+
+    @app.after_request
+    def set_browser_security_headers(response):
+        response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        return response
 
     if not app.config.get("SECRET_KEY"):
         raise RuntimeError("SECRET_KEY must be set")
@@ -109,5 +132,4 @@ def init_email_error_handler(app):
     app.logger.addHandler(mail_handler)
 
     # Log errors using: app.logger.error('Some error message')
-
 
