@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate that the flag bundle contains runtime assets, not build tooling."""
+"""Validate vendored browser assets and source snapshots without build tooling."""
 
 from pathlib import Path
 
@@ -7,6 +7,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / "flask-bootstrap/app/static/css/flag-icon-css"
 TOOLTIP_BUNDLE = ROOT / "flask-bootstrap/app/static/js/@coreui/plugin-chartjs-custom-tooltips"
+COREUI_BUNDLES = (
+    ROOT / "flask-bootstrap/app/static/js/@coreui/coreui",
+    ROOT / "flask-bootstrap/app/static/js/coreui",
+)
+COREUI_REQUIRED_FILES = tuple(
+    bundle / relative
+    for bundle in COREUI_BUNDLES
+    for relative in ("LICENSE", "README.md", "js/src/index.js", "scss/coreui.scss")
+)
 REQUIRED_FILES = (
     BUNDLE / "LICENSE",
     BUNDLE / "README.md",
@@ -14,7 +23,7 @@ REQUIRED_FILES = (
     BUNDLE / "css/flag-icon.min.css",
     TOOLTIP_BUNDLE / "README.md",
     TOOLTIP_BUNDLE / "js/custom-tooltips.js",
-)
+) + COREUI_REQUIRED_FILES
 FORBIDDEN_PATHS = (
     ".editorconfig",
     "Gruntfile.coffee",
@@ -26,6 +35,13 @@ FORBIDDEN_PATHS = (
     "package.json",
     "sass",
     "svgo.yaml",
+    "yarn.lock",
+)
+COREUI_FORBIDDEN_FILES = (
+    "package.json",
+    "package-lock.json",
+    "npm-shrinkwrap.json",
+    "pnpm-lock.yaml",
     "yarn.lock",
 )
 
@@ -45,6 +61,12 @@ def main() -> None:
 
     if (TOOLTIP_BUNDLE / "package.json").exists():
         raise SystemExit("the unused CoreUI tooltip package build graph must stay removed")
+
+    for bundle in COREUI_BUNDLES:
+        forbidden = [name for name in COREUI_FORBIDDEN_FILES if (bundle / name).exists()]
+        if forbidden:
+            relative = bundle.relative_to(ROOT)
+            raise SystemExit(f"unused CoreUI build graph in {relative}: {', '.join(forbidden)}")
 
     for ratio in ("1x1", "4x3"):
         flags = tuple((BUNDLE / "flags" / ratio).glob("*.svg"))
