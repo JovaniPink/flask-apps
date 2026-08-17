@@ -30,6 +30,9 @@ All other directories are historical or experimental examples. They are useful f
 but they are not covered by the current CI matrix and should not be treated as release-ready until
 they gain an explicit test and dependency-maintenance contract.
 
+The repository documentation index and the promotion, demotion, and vendored-asset rules are in
+[`docs/README.md`](docs/README.md).
+
 ## Dependency Contract
 
 Maintained applications use two coordinated files:
