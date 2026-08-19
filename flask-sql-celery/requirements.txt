@@ -41,7 +41,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 greenlet==3.5.5
     # via sqlalchemy
-gunicorn==26.0.0
+gunicorn==26.1.0
     # via -r requirements.in
 iniconfig==2.3.0
     # via pytest
@@ -61,7 +61,6 @@ markupsafe==3.0.3
     #   werkzeug
 packaging==26.3
     # via
-    #   gunicorn
     #   kombu
     #   pytest
 pluggy==1.6.0
