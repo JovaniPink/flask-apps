@@ -2,6 +2,9 @@
 #
 # Authors: Ling Thio <ling.thio@gmail.com>
 
+import re
+
+
 def test_page_urls(app, client):
     assert app.config["SECURITY_WEBAUTHN"] is False
 
@@ -89,3 +92,9 @@ def test_browser_supply_chain_contract(client):
     assert page.count("https://cdn.jsdelivr.net/npm/highcharts@12.4.0/") == 3
     assert "https://code.highcharts.com/" not in page
     assert page.count('integrity="sha384-') == 4
+
+    local_assets = set(re.findall(r'(?:href|src)="(/static/[^"?#]+)', page))
+    assert local_assets
+    for asset_url in local_assets:
+        asset = client.get(asset_url)
+        assert asset.status_code == 200, f"missing local browser asset: {asset_url}"

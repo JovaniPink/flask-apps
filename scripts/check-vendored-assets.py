@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate vendored browser assets and source snapshots without build tooling."""
 
+import hashlib
 from pathlib import Path
 
 
@@ -11,6 +12,9 @@ COREUI_BUNDLES = (
     ROOT / "flask-bootstrap/app/static/js/@coreui/coreui",
     ROOT / "flask-bootstrap/app/static/js/coreui",
 )
+PACE_BUNDLE = ROOT / "flask-bootstrap/app/static/js/pace-progress"
+PERFECT_SCROLLBAR_BUNDLE = ROOT / "flask-bootstrap/app/static/js/perfect-scrollbar"
+POPPER_BUNDLE = ROOT / "flask-bootstrap/app/static/js/popper.js"
 COREUI_REQUIRED_FILES = tuple(
     bundle / relative
     for bundle in COREUI_BUNDLES
@@ -23,6 +27,14 @@ REQUIRED_FILES = (
     BUNDLE / "css/flag-icon.min.css",
     TOOLTIP_BUNDLE / "README.md",
     TOOLTIP_BUNDLE / "js/custom-tooltips.js",
+    PACE_BUNDLE / "LICENSE",
+    PACE_BUNDLE / "README.md",
+    PACE_BUNDLE / "pace.js",
+    PACE_BUNDLE / "pace.min.js",
+    PERFECT_SCROLLBAR_BUNDLE / "LICENSE",
+    PERFECT_SCROLLBAR_BUNDLE / "README.md",
+    PERFECT_SCROLLBAR_BUNDLE / "dist/perfect-scrollbar.min.js",
+    COREUI_BUNDLES[0] / "dist/js/coreui.min.js",
 ) + COREUI_REQUIRED_FILES
 FORBIDDEN_PATHS = (
     ".editorconfig",
@@ -44,6 +56,25 @@ COREUI_FORBIDDEN_FILES = (
     "pnpm-lock.yaml",
     "yarn.lock",
 )
+LEGACY_BUILD_FILES = (
+    ".hsdoc",
+    ".npmignore",
+    "Gruntfile.coffee",
+    "bower.json",
+    "package.json",
+    "package-lock.json",
+    "npm-shrinkwrap.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+)
+EXPECTED_RUNTIME_HASHES = {
+    PERFECT_SCROLLBAR_BUNDLE / "dist/perfect-scrollbar.min.js": (
+        "9b237657ba86b4f520dcbe7af367b6b566b07e66385258442fd219a80d58629e"
+    ),
+    COREUI_BUNDLES[0] / "dist/js/coreui.min.js": (
+        "14c42dffdf34c2d8dcaf36b9f5d97680d25cf859eba2da7b45e0e9c6f02d322d"
+    ),
+}
 
 
 def main() -> None:
@@ -67,6 +98,25 @@ def main() -> None:
         if forbidden:
             relative = bundle.relative_to(ROOT)
             raise SystemExit(f"unused CoreUI build graph in {relative}: {', '.join(forbidden)}")
+
+    for bundle in (PACE_BUNDLE, PERFECT_SCROLLBAR_BUNDLE):
+        forbidden = [name for name in LEGACY_BUILD_FILES if (bundle / name).exists()]
+        if forbidden:
+            relative = bundle.relative_to(ROOT)
+            raise SystemExit(f"legacy browser build graph in {relative}: {', '.join(forbidden)}")
+
+    if POPPER_BUNDLE.exists():
+        raise SystemExit("unused Popper metadata bundle must stay removed")
+
+    for path, expected in EXPECTED_RUNTIME_HASHES.items():
+        data = path.read_bytes()
+        if not data.endswith(b"\n") or data.endswith(b"\n\n"):
+            relative = path.relative_to(ROOT)
+            raise SystemExit(f"vendored runtime must have one normalized trailing newline: {relative}")
+        actual = hashlib.sha256(data.removesuffix(b"\n")).hexdigest()
+        if actual != expected:
+            relative = path.relative_to(ROOT)
+            raise SystemExit(f"unexpected vendored runtime bytes in {relative}: {actual}")
 
     for ratio in ("1x1", "4x3"):
         flags = tuple((BUNDLE / "flags" / ratio).glob("*.svg"))

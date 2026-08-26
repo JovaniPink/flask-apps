@@ -26,6 +26,14 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Reviewed browser runtime artifacts. The generic Python `dist/` rule above
+# must not hide these exact vendored files.
+!app/static/js/perfect-scrollbar/dist/
+!app/static/js/perfect-scrollbar/dist/perfect-scrollbar.min.js
+!app/static/js/@coreui/coreui/dist/
+!app/static/js/@coreui/coreui/dist/js/
+!app/static/js/@coreui/coreui/dist/js/coreui.min.js
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
