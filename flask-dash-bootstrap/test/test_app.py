@@ -4,6 +4,7 @@ import dash
 from dash.development.base_component import Component
 
 from app import app, build_navigation, server
+from pages.index import figure as overview_figure
 from pages.not_found_404 import layout as not_found_layout
 
 
@@ -70,6 +71,17 @@ def test_layout_and_dependency_endpoints_are_available():
 
     assert client.get("/_dash-layout").status_code == 200
     assert client.get("/_dash-dependencies").status_code == 200
+
+
+def test_overview_figure_serializes_with_the_expected_plotly_contract():
+    figure = overview_figure.to_plotly_json()
+
+    assert len(figure["data"]) == 1
+    assert figure["data"][0]["type"] == "scatter"
+    assert figure["data"][0]["mode"] == "lines+markers"
+    assert figure["data"][0]["x"] == [1, 2, 3, 4, 5]
+    assert figure["data"][0]["y"] == [2, 5, 4, 8, 9]
+    assert figure["layout"]["title"]["text"] == "A small, dependency-light Plotly figure"
 
 
 def test_health_check_is_machine_readable():
