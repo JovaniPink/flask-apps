@@ -19,9 +19,37 @@ EXPECTED_SCRIPTS = {
     "https://cdn.jsdelivr.net/npm/highcharts@12.4.0/modules/exporting.js",
     "https://cdn.jsdelivr.net/npm/highcharts@12.4.0/modules/export-data.js",
 }
+UV_VERSION_SOURCES = {
+    "Renovate": (ROOT / "renovate.json", r'"uv": "==([0-9]+\.[0-9]+\.[0-9]+)"'),
+    "lock compiler": (
+        ROOT / "scripts/compile-python-locks.sh",
+        r'EXPECTED_UV_VERSION="([0-9]+\.[0-9]+\.[0-9]+)"',
+    ),
+    "CI": (
+        ROOT / ".github/workflows/ci.yml",
+        r"uv==([0-9]+\.[0-9]+\.[0-9]+)",
+    ),
+    "root README": (
+        ROOT / "README.md",
+        r"uv==([0-9]+\.[0-9]+\.[0-9]+)",
+    ),
+    "Dash README": (
+        ROOT / "flask-dash-bootstrap/README.md",
+        r"uv==([0-9]+\.[0-9]+\.[0-9]+)",
+    ),
+}
 
 
 def main() -> None:
+    uv_versions = {}
+    for source, (path, pattern) in UV_VERSION_SOURCES.items():
+        matches = set(re.findall(pattern, path.read_text()))
+        if len(matches) != 1:
+            raise SystemExit(f"{source} must declare exactly one uv version: {matches}")
+        uv_versions[source] = matches.pop()
+    if len(set(uv_versions.values())) != 1:
+        raise SystemExit(f"uv version contract differs across sources: {uv_versions}")
+
     mutable_images = []
     for dockerfile in ROOT.rglob("Dockerfile"):
         for line_number, line in enumerate(dockerfile.read_text().splitlines(), 1):
@@ -50,7 +78,7 @@ def main() -> None:
     if observed != EXPECTED_SCRIPTS:
         raise SystemExit("browser dependency allowlist is incomplete")
 
-    print("Container digests and external browser script integrity contracts passed.")
+    print("Toolchain, container, and external browser integrity contracts passed.")
 
 
 if __name__ == "__main__":
