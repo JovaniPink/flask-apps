@@ -92,6 +92,19 @@ Or use the container image:
 
     python -m pytest -q
 
+## Browser dependency boundary
+
+This historical UI reference retains reviewed, compiled runtime files for
+Pace 1.0.2, Perfect Scrollbar 1.3.0, and CoreUI 2.0.0-beta.2. Their licenses
+and upstream READMEs remain beside the assets. The obsolete npm, Bower, and
+Grunt build graphs are deliberately excluded: do not run package installation
+inside `app/static/`.
+
+The templates use Bootstrap 3's local JavaScript, which does not require
+Popper. The previously vendored Popper metadata and broken `dist/` reference
+were therefore removed. Tests request every local stylesheet and script linked
+from the rendered page so ignored or missing runtime files fail CI.
+
 
 ## Trouble shooting
 
