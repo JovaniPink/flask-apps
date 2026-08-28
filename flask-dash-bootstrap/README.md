@@ -52,7 +52,7 @@ Regenerate every maintained lock from the repository root with the pinned `uv` v
 
 ```bash
 python3.14 -m venv .lock-venv
-.lock-venv/bin/python -m pip install uv==0.12.6
+.lock-venv/bin/python -m pip install uv==0.12.7
 PATH="$PWD/.lock-venv/bin:$PATH" ./scripts/compile-python-locks.sh
 ```
 
