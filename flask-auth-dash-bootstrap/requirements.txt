@@ -86,9 +86,9 @@ plotly==6.9.0
     # via dash
 pluggy==1.6.0
     # via pytest
-psycopg==3.3.4
+psycopg==3.3.5
     # via -r requirements.in
-psycopg-binary==3.3.4
+psycopg-binary==3.3.5
     # via psycopg
 pydantic==2.13.4
     # via dash
