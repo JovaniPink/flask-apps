@@ -12,7 +12,7 @@ certifi==2026.7.22
     # via requests
 charset-normalizer==3.5.1
     # via requests
-click==8.4.2
+click==8.5.0
     # via flask
 comm==0.2.3
     # via dash
@@ -43,9 +43,9 @@ greenlet==3.5.5
     # via sqlalchemy
 gunicorn==26.2.0
     # via -r requirements.in
-idna==3.18
+idna==3.19
     # via requests
-importlib-metadata==9.0.0
+importlib-metadata==9.0.1
     # via dash
 iniconfig==2.3.0
     # via pytest
@@ -57,7 +57,7 @@ janus==2.0.0
     # via dash
 jinja2==3.1.6
     # via flask
-lxml==6.1.1
+lxml==6.1.3
     # via pandas-datareader
 mako==1.4.1
     # via alembic
@@ -68,7 +68,7 @@ markupsafe==3.0.3
     #   mako
     #   werkzeug
     #   wtforms
-narwhals==2.24.0
+narwhals==2.25.0
     # via plotly
 nest-asyncio==1.6.0
     # via dash
@@ -82,7 +82,7 @@ pandas==3.0.5
     # via pandas-datareader
 pandas-datareader==0.11.1
     # via -r requirements.in
-plotly==6.9.0
+plotly==7.0.0
     # via dash
 pluggy==1.6.0
     # via pytest
@@ -90,11 +90,11 @@ psycopg==3.3.4
     # via -r requirements.in
 psycopg-binary==3.3.4
     # via psycopg
-pydantic==2.13.4
+pydantic==2.13.5
     # via dash
-pydantic-core==2.46.4
+pydantic-core==2.46.5
     # via pydantic
-pygments==2.20.0
+pygments==2.21.0
     # via pytest
 pytest==9.1.1
     # via -r requirements.in
