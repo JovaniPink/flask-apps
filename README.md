@@ -24,7 +24,7 @@ together.
 | [`flask-connextion-rest`](flask-connextion-rest/) | Connexion/OpenAPI API with request, response, and persistence constraints across Flask, SQLAlchemy, and Marshmallow | Python install, dependency check, OpenAPI and contract tests, and security audit |
 | [`flask-dash-bootstrap`](flask-dash-bootstrap/) | Dash Pages application with registry-owned routing, responsive Bootstrap composition, and a production WSGI boundary | Python install, request/layout tests, dependency audit, container build, non-root runtime, and health check |
 | [`flask-mongo-celery`](flask-mongo-celery/) | Flask, MongoDB-oriented data access, and Celery background work | Dependency audit plus container build and containerized tests |
-| [`flask-sql-celery`](flask-sql-celery/) | Flask, SQLAlchemy, Celery, and a composed service stack | Python tests, dependency audit, Compose validation, build, startup, and health check |
+| [`flask-sql-celery`](flask-sql-celery/) | Flask, SQLAlchemy, Celery, and a composed service stack | Python tests, dependency audit, Compose validation, build, startup, health check, and worker/result round trip |
 
 All other directories are historical or experimental examples. They are useful for reference,
 but they are not covered by the current CI matrix and should not be treated as release-ready until
@@ -103,6 +103,8 @@ docker compose config --quiet
 docker compose build
 docker compose up --detach --wait
 curl --fail --silent --show-error http://localhost:5000/healthz
+python3 scripts/check_worker.py
+# Disposable test data only: this removes the Compose database volume.
 docker compose down --volumes
 ```
 

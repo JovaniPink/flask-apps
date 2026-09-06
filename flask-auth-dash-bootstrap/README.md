@@ -24,13 +24,12 @@ docker build -t flask-auth-dash-bootstrap .
 docker run --rm flask-auth-dash-bootstrap python -m pytest -q
 ```
 
-## Deploy on Heroku (free)
-First, edit the app.json and replace the value of the `repository`:
-```
-"repository": "https://github.com/okomarov/dash_on_flask"
-```
-with the URL to the forked repository.
+## Runtime evidence boundary
 
-Then click on the button:
+The stock callback calls Yahoo through pandas-datareader. Local authentication and
+layout tests do not prove current provider availability, data rights, or a successful
+live chart. Verify those separately before using this example with external users.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+The inherited Heroku deployment instructions are not validated for this repository.
+Heroku [removed its free dyno and database plans](https://devcenter.heroku.com/changelog-items/2502).
+No deployment or provider acceptance is established by the local gates above.

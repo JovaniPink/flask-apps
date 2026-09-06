@@ -18,6 +18,7 @@ a production deployment template.
 docker compose up --build --wait
 curl --fail http://localhost:5000/healthz
 curl --fail http://localhost:5000/
+python3 scripts/check_worker.py
 ```
 
 Stop the containers without deleting database data:
@@ -30,6 +31,18 @@ The Compose project stores PostgreSQL 18 data in the `pgdata18` named volume,
 mounted at `/var/lib/postgresql` as required by the official PostgreSQL 18
 image layout.
 
+The worker check submits only the sample `process_data` task and polls its result;
+it is also required by CI. A passing health endpoint alone does not prove broker or
+worker execution. Tests use an in-memory eager backend; the composed runtime uses
+PostgreSQL for shared task results across Gunicorn processes. Celery creates its
+result tables in that database. Existing RPC results are not migrated or preserved
+by this configuration change. The sample is not a live deployment migration.
+
+The worker explicitly imports the API task module. Control and event queues are
+exclusive, compatible with RabbitMQ 4.3's queue rules without enabling deprecated
+transient non-exclusive queues. See the [RabbitMQ queue contract](https://www.rabbitmq.com/docs/queues)
+and [Celery result backend documentation](https://docs.celeryq.dev/en/stable/userguide/tasks.html#result-backends).
+
 ## Local tests
 
 ```sh
@@ -38,12 +51,14 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 APP_ENV=Test python -m pytest -q
 python -m pip check
+python -m pip install pip-audit==2.10.1
 python -m pip_audit -r requirements.txt
 docker compose config --quiet
 ```
 
 `requirements.in` contains direct dependency intent. `requirements.txt` is the
-generated lock and should be refreshed with `pip-compile`, not edited by hand.
+generated lock and should be refreshed with the repository's pinned
+`scripts/compile-python-locks.sh` wrapper, not edited by hand.
 
 ## PostgreSQL 13 to 18 boundary
 

@@ -18,6 +18,10 @@ when changing a write payload.
 
 ## Local use
 
+This unauthenticated sample is for local demonstration. `build_database.py` drops
+and recreates tables in the configured `DATABASE_URL` (local SQLite by default);
+run it only against a disposable database. Do not point it at retained or live data.
+
 ```bash
 python -m pip install -r requirements.txt
 python build_database.py
@@ -39,10 +43,10 @@ python -m compileall -q .
 python -m openapi_spec_validator swagger.yml
 ```
 
-Edit direct pins in `requirements.in`, then regenerate the Python 3.14 lock:
+Edit direct pins in `requirements.in`, then use the root README to install the
+pinned uv generator and regenerate Linux/Python 3.14 locks from this directory:
 
 ```bash
-python -m pip install pip-tools
-pip-compile --upgrade --resolver=backtracking --strip-extras \
-  --output-file=requirements.txt requirements.in
+cd ..
+./scripts/compile-python-locks.sh
 ```

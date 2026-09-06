@@ -30,13 +30,11 @@ wide variety of applications based on Python and Flask.
 
 You need Python 3.14 and a virtual environment tool, or Docker.
 
-    # Clone the code repository into ~/dev/my_app
-    mkdir -p ~/dev
-    cd ~/dev
-    git clone https://github.com/twintechlabs/flaskdash.git my_app
+    # Clone this maintained multi-application repository
+    git clone https://github.com/JovaniPink/flask-apps.git
+    cd flask-apps/flask-bootstrap
 
     # Create a virtual environment and install the locked dependencies
-    cd ~/dev/my_app
     python3.14 -m venv .venv
     . .venv/bin/activate
     python -m pip install -r requirements.txt
@@ -58,6 +56,10 @@ configurations suppress delivery by default.
 
 ## Initializing the Database
 
+`init-db` confirms before dropping and recreating the configured database and seeding
+known example accounts. Use it only with a disposable local database. Use reviewed
+migrations for any database whose data must be preserved.
+
     # Create DB tables and populate the roles and users tables
     flask --app wsgi:app db upgrade
     flask --app manage:app init-db
@@ -76,7 +78,11 @@ You can make use of the following users:
 
 ## Running the app (production)
 
-Gunicorn is included in the locked dependencies:
+Gunicorn is included in the locked dependencies. These commands demonstrate the WSGI
+runtime; they do not establish production readiness. Remove the known example accounts,
+configure unique secrets and delivery settings, and verify the deployment separately
+before exposing a derived application.
+
 
     gunicorn wsgi:app
 

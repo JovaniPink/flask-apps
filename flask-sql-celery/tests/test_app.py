@@ -24,3 +24,18 @@ def test_celery_task_runs_eagerly():
     task_id = response.get_json()['task_id']
     status_response = app.test_client().get(f'/api/tasks/{task_id}')
     assert status_response.get_json() == {'status': 'processed'}
+
+
+def test_worker_loads_the_task_without_web_process_imports():
+    import os
+    import subprocess
+    import sys
+
+    subprocess.run(
+        [sys.executable, '-c',
+         'from tasks import celery; celery.loader.import_default_modules(); '
+         'assert "api.process_data" in celery.tasks'],
+        env={**os.environ, 'APP_ENV': 'Test'},
+        check=True,
+        timeout=30,
+    )
