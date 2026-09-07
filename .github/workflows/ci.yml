@@ -118,6 +118,7 @@ jobs:
       - run: docker compose build
       - run: docker compose up --detach --wait
       - run: curl --fail --silent --show-error http://localhost:5000/healthz
+      - run: python scripts/check_worker.py
       - if: always()
         run: docker compose down --volumes
 

@@ -90,6 +90,12 @@ MongoDB defaults independently.
 
 ### Container validation
 
+These tests use mocked database/task boundaries and a local Chromium data URI.
+They do not prove a live MongoDB broker round trip or the current NASA, JPL, USGS,
+and Space Facts selectors. Treat the scraping routines as source-specific examples;
+verify source availability, terms and image rights before collecting or publishing
+external material. The repository MIT license does not grant rights to fetched content.
+
 ```sh
 docker build -t flask-mongo-celery .
 docker run --rm flask-mongo-celery python -m pytest -q

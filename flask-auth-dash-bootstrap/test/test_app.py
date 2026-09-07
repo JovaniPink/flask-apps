@@ -58,3 +58,17 @@ def test_registration_login_and_dashboard_access(application):
     dashboard = client.get("/dashboard/")
     assert dashboard.status_code == 200
     assert "Dashapp 1" in dashboard.text
+
+
+@pytest.mark.parametrize("next_page", ["https:///example.test", "/\\example.test", "javascript:alert(1)", "//example.test"])
+def test_login_rejects_nonlocal_redirects(application, next_page):
+    from urllib.parse import urlencode
+
+    client = application.test_client()
+    client.post("/register/", data={"username": "ada", "password": "analytical-engine"})
+    response = client.post(
+        "/login/?" + urlencode({"next": next_page}),
+        data={"username": "ada", "password": "analytical-engine"},
+    )
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/"

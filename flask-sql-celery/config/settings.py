@@ -14,7 +14,9 @@ class BaseConfig:
         'CELERY_BROKER_URL',
         'pyamqp://rabbit_user:rabbit_password@broker-rabbitmq//',
     )
-    CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'rpc://')
+    CELERY_RESULT_BACKEND = os.environ.get(
+        'CELERY_RESULT_BACKEND', 'db+' + SQLALCHEMY_DATABASE_URI,
+    )
     CELERY_TASK_ALWAYS_EAGER = False
 
 
