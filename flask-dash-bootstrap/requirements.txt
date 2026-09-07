@@ -8,7 +8,7 @@ certifi==2026.7.22
     # via requests
 charset-normalizer==3.5.1
     # via requests
-click==8.4.2
+click==8.5.0
     # via flask
 comm==0.2.3
     # via dash
@@ -22,9 +22,9 @@ flask==3.1.3
     # via dash
 gunicorn==26.2.0
     # via -r requirements.in
-idna==3.18
+idna==3.19
     # via requests
-importlib-metadata==9.0.0
+importlib-metadata==9.0.1
     # via dash
 iniconfig==2.3.0
     # via pytest
@@ -39,7 +39,7 @@ markupsafe==3.0.3
     #   flask
     #   jinja2
     #   werkzeug
-narwhals==2.24.0
+narwhals==2.25.0
     # via plotly
 nest-asyncio==1.6.0
     # via dash
@@ -53,11 +53,11 @@ plotly==7.0.0
     #   dash
 pluggy==1.6.0
     # via pytest
-pydantic==2.13.4
+pydantic==2.13.5
     # via dash
-pydantic-core==2.46.4
+pydantic-core==2.46.5
     # via pydantic
-pygments==2.20.0
+pygments==2.21.0
     # via pytest
 pytest==9.1.1
     # via -r requirements.in
