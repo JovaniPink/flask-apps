@@ -4,6 +4,8 @@
 # https://splinter.readthedocs.io/en/latest/#
 from splinter import Browser
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+import shutil
 
 # https://beautiful-soup-4.readthedocs.io/en/latest/
 from bs4 import BeautifulSoup as soup
@@ -19,11 +21,16 @@ from app import app, mongo, celery
 
 def create_browser():
     """Create the container-compatible headless Chromium session."""
+    chromium = shutil.which("chromium") or shutil.which("chromium-browser")
+    driver = shutil.which("chromedriver")
+    if not chromium or not driver:
+        raise RuntimeError("Chromium and chromedriver must be installed on PATH")
     options = Options()
+    options.binary_location = chromium
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    return Browser("chrome", options=options)
+    return Browser("chrome", options=options, service=Service(executable_path=driver))
 
 
 @celery.task(bind=True)

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-readonly EXPECTED_UV_VERSION="0.12.10"
+readonly EXPECTED_UV_VERSION="0.12.21"
 readonly TARGET_PLATFORM="linux"
 readonly TARGET_PYTHON_VERSION="3.14"
 readonly REPOSITORY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
