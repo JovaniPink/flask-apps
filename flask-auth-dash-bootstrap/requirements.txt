@@ -86,7 +86,7 @@ plotly==7.0.0
     # via dash
 pluggy==1.6.0
     # via pytest
-psycopg==3.3.5
+psycopg[binary]==3.3.5
     # via -r requirements.in
 psycopg-binary==3.3.5
     # via psycopg
@@ -124,7 +124,7 @@ typing-inspection==0.4.4
     # via pydantic
 urllib3==2.8.0
     # via requests
-werkzeug==3.1.8
+werkzeug==3.1.9
     # via
     #   dash
     #   flask
@@ -133,6 +133,3 @@ wtforms==3.2.2
     # via flask-wtf
 zipp==4.1.0
     # via importlib-metadata
-
-# The following packages were excluded from the output:
-# setuptools
