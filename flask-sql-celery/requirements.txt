@@ -67,7 +67,7 @@ pluggy==1.6.0
     # via pytest
 prompt-toolkit==3.0.53
     # via click-repl
-psycopg==3.3.5
+psycopg[binary]==3.3.5
     # via -r requirements.in
 psycopg-binary==3.3.5
     # via psycopg
@@ -102,5 +102,5 @@ vine==5.1.0
     #   kombu
 wcwidth==0.8.3
     # via prompt-toolkit
-werkzeug==3.1.8
+werkzeug==3.1.9
     # via flask
