@@ -105,7 +105,7 @@ typing-extensions==4.16.0
     #   sqlalchemy
 webencodings==0.6.1
     # via bleach
-werkzeug==3.1.8
+werkzeug==3.1.9
     # via
     #   flask
     #   flask-login
