@@ -1,4 +1,4 @@
-FROM python:3-alpine@sha256:c6ead215bfd31f1e433d968853b7a769989117115b728874824e6c0a27cb96fc
+FROM python:3-alpine@sha256:d44b1254cb92329418d164b22b20d86bbd3869d48e80e09e476531a409a728bb
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
