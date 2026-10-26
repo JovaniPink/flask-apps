@@ -6,7 +6,7 @@ annotated-types==0.8.0
     # via pydantic
 blinker==1.9.0
     # via flask
-brotli==1.2.0
+brotli==1.2.1
     # via flask-compress
 certifi==2026.7.22
     # via requests
@@ -86,7 +86,7 @@ plotly==7.0.0
     # via dash
 pluggy==1.6.0
     # via pytest
-psycopg==3.3.5
+psycopg[binary]==3.3.5
     # via -r requirements.in
 psycopg-binary==3.3.5
     # via psycopg
@@ -133,6 +133,3 @@ wtforms==3.2.2
     # via flask-wtf
 zipp==4.1.0
     # via importlib-metadata
-
-# The following packages were excluded from the output:
-# setuptools
