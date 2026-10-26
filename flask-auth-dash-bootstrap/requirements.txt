@@ -6,7 +6,7 @@ annotated-types==0.8.0
     # via pydantic
 blinker==1.9.0
     # via flask
-brotli==1.2.0
+brotli==1.2.1
     # via flask-compress
 certifi==2026.7.22
     # via requests
