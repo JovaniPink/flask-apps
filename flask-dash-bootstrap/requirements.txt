@@ -4,7 +4,7 @@ annotated-types==0.8.0
     # via pydantic
 blinker==1.9.0
     # via flask
-certifi==2026.7.22
+certifi==2026.10.19
     # via requests
 charset-normalizer==3.5.1
     # via requests
@@ -81,6 +81,3 @@ werkzeug==3.1.8
     #   flask
 zipp==4.1.0
     # via importlib-metadata
-
-# The following packages were excluded from the output:
-# setuptools
