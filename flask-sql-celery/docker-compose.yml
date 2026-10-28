@@ -1,6 +1,6 @@
 services:
   broker-rabbitmq:
-    image: "rabbitmq:4.3-management@sha256:ffd1b50c522ad20172ffd6716a2f41db375c7269560c8f3fb9a694e210ef0852"
+    image: "rabbitmq:4.3-management@sha256:1cc652597e8d31d2bb4afc3be60f84961fe17aa4edc5bf067cbf9834afcc441b"
     environment:
       RABBITMQ_DEFAULT_USER: rabbit_user
       RABBITMQ_DEFAULT_PASS: rabbit_password
